@@ -9,8 +9,8 @@ import hotciv.framework.Position;
  */
 public class CityImpl implements City {
 
-    private Player player;
-    private Position position;
+    public Player player;
+    public Position position;
 
     public CityImpl(Player color, Position p) {
 
@@ -38,4 +38,6 @@ public class CityImpl implements City {
     public String getWorkforceFocus() {
         return null;
     }
+
+
 }

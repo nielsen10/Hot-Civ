@@ -16,15 +16,17 @@ public class TileImpl implements Tile {
     public String type;
 
     public TileImpl(Position p, String t) {
-        position = p;
-        t=type;
+        this.position = p;
+        this.type = t;
 
     }
 
 
     @Override
     public String getTypeString() {
-
-        return type;
+        return this.type;
+    }
+    public Position getTilePos(){
+        return this.position;
     }
 }
