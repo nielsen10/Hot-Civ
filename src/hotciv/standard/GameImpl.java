@@ -35,13 +35,14 @@ import java.util.HashMap;
 public class GameImpl implements Game {
 
   public CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
-  public CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(10,1));
-  public TileImpl ocean = new TileImpl(new Position(1,2), "ocean");
-  public TileImpl mountain = new TileImpl(new Position(1,3), "mountain");
+  public CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
+  public TileImpl ocean = new TileImpl(new Position(1,0), "ocean");
+  public TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
   public TileImpl plain = new TileImpl(new Position(1,4), "plain");
-  public TileImpl hills = new TileImpl(new Position(3,3 ), "hills");
-  public UnitImpl archer = new UnitImpl(new Position(2,2), "archer", Player.RED);
-  public UnitImpl legion = new UnitImpl(new Position(2,5), "legion", Player.BLUE);
+  public TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
+  public UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
+  public UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
+  public UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
   HashMap<Position,UnitImpl> unitMap = new HashMap();
   HashMap<Position,TileImpl> tileMap = new HashMap();
   HashMap<Position,CityImpl> cityMap = new HashMap();
@@ -53,6 +54,7 @@ public class GameImpl implements Game {
     tileMap.put(plain.getPosition(), plain);
     unitMap.put(archer.getPosition(), archer);
     unitMap.put(legion.getPosition(), legion);
+    unitMap.put(settler.getPosition(), settler);
     cityMap.put(cityRed.getPosition(), cityRed);
     cityMap.put(cityBlue.getPosition(), cityBlue);
 

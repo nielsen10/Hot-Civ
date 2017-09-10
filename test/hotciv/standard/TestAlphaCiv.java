@@ -100,8 +100,8 @@ public class TestAlphaCiv {
     @Test
     public void shoudlBeBlueCityStartingPos() {
         game.endOfTurn();
-        assertThat(game.getCityAt(new Position(10, 1)), is(notNullValue()));
-        assertThat(game.getCityAt(new Position(10, 1)).getOwner(), is(Player.BLUE));
+        assertThat(game.getCityAt(new Position(4, 1)), is(notNullValue()));
+        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.BLUE));
     }
 
     @Test
@@ -111,23 +111,23 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldBeBlueCityPopulationAlways1() {
-        assertThat(game.getCityAt(new Position(10, 1)).getSize(), is(1));
+        assertThat(game.getCityAt(new Position(4, 1)).getSize(), is(1));
     }
 
     @Test
     public void shouldBeOcean() {
-        assertThat(game.getTileAt(new Position(1, 2)).getTypeString(), is("ocean"));
+        assertThat(game.getTileAt(new Position(1, 0)).getTypeString(), is("ocean"));
     }
 
     @Test
-    public void shoudBeMountain() {
-        assertThat(game.getTileAt(new Position(1, 3)).getTypeString(), is("mountain"));
+    public void shouldBeMountain() {
+        assertThat(game.getTileAt(new Position(2, 2)).getTypeString(), is("mountain"));
     }
 
 
     @Test
     public void shouldBeHills() {
-        assertThat(game.getTileAt(new Position(3, 3)).getTypeString(), is("hills"));
+        assertThat(game.getTileAt(new Position(0, 1)).getTypeString(), is("hills"));
     }
 
     @Test
@@ -137,77 +137,83 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldBeArcher() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
     }
 
     @Test
     public void shouldBeRedArcher() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getOwner(), not(Player.BLUE));
-        assertThat(game.getUnitAt(new Position(2, 2)).getOwner(), is(Player.RED));
+        assertThat(game.getUnitAt(new Position(2, 0)).getOwner(), not(Player.BLUE));
+        assertThat(game.getUnitAt(new Position(2, 0)).getOwner(), is(Player.RED));
 
     }
 
     @Test
     public void shouldBeBlueLegion() {
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), is("legion"));
-        assertThat(game.getUnitAt(new Position(2, 5)).getOwner(), is(Player.BLUE));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), is("legion"));
+        assertThat(game.getUnitAt(new Position(3, 2)).getOwner(), is(Player.BLUE));
+    }
+
+    @Test
+    public void shouldBeRedSettler() {
+        assertThat(game.getUnitAt(new Position(4,3)).getTypeString(), is("settler"));
+        assertThat(game.getUnitAt(new Position(4,3)).getOwner(), is(Player.RED));
     }
 
     @Test
     public void shouldMoveArcher1Field() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(2, 3));
-        assertThat(game.getUnitAt(new Position(2, 3)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(game.getUnitAt(new Position(2, 1)).getTypeString(), is("archer"));
     }
 
     @Test
     public void shouldMoveArcher1FieldAndNotDuplicate() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(2, 3));
-        assertThat(game.getUnitAt(new Position(2, 3)).getTypeString(), is("archer"));
-        assertThat(game.getUnitAt(new Position(2, 2)), nullValue());
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(game.getUnitAt(new Position(2, 1)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(2, 0)), nullValue());
     }
 
     @Test
     public void shouldMoveLegion1Field() {
         game.endOfTurn();
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), is("legion"));
-        game.moveUnit(new Position(2, 5), new Position(3, 5));
-        assertThat(game.getUnitAt(new Position(3, 5)).getTypeString(), is("legion"));
-        assertThat(game.getUnitAt(new Position(2, 5)), nullValue());
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), is("legion"));
+        game.moveUnit(new Position(3, 2), new Position(3, 3));
+        assertThat(game.getUnitAt(new Position(3, 3)).getTypeString(), is("legion"));
+        assertThat(game.getUnitAt(new Position(3, 2)), nullValue());
     }
 
     @Test
     public void shouldNotWalkOnOcean() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(1, 2));
-        assertThat(game.getUnitAt(new Position(1, 2)), nullValue());
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(game.getUnitAt(new Position(2, 0)), nullValue());
     }
 
     @Test
     public void shouldNotWalkOnMountain() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(1, 3));
-        assertThat(game.getUnitAt(new Position(1, 3)), nullValue());
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(2, 2));
+        assertThat(game.getUnitAt(new Position(2, 2)), nullValue());
     }
 
     @Test
     public void shouldRemoveOnEnemyAttack() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(2, 5));
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), is("archer"));
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), not("legion"));
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(3, 2));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), not("legion"));
 
     }
 
     @Test
     public void shouldBeRemovedWhenDefeatet() {
-        assertThat(game.getUnitAt(new Position(2, 2)).getTypeString(), is("archer"));
-        game.moveUnit(new Position(2, 2), new Position(2, 5));
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), is("archer"));
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), not("legion"));
-        game.moveUnit(new Position(2, 5), new Position(2, 6));
-        assertThat(game.getUnitAt(new Position(2, 5)), nullValue());
+        assertThat(game.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        game.moveUnit(new Position(2, 0), new Position(3, 2));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), not("legion"));
+        game.moveUnit(new Position(3, 2), new Position(2, 6));
+        assertThat(game.getUnitAt(new Position(3, 2)), nullValue());
         assertThat(game.getUnitAt(new Position(2, 6)).getTypeString(), is("archer"));
     }
 
@@ -220,23 +226,23 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldOvertakeBlueCity() {
-        assertThat(game.getCityAt(new Position(10, 1)).getOwner(), is(Player.BLUE));
-        game.moveUnit(new Position(2, 2), new Position(10, 1));
-        assertThat(game.getCityAt(new Position(10, 1)).getOwner(), is(Player.RED));
+        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.BLUE));
+        game.moveUnit(new Position(2, 0), new Position(4, 1));
+        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.RED));
     }
 
     @Test
     public void shouldOvertakeRedCity() {
         game.endOfTurn();
         assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.RED));
-        game.moveUnit(new Position(2, 5), new Position(1, 1));
+        game.moveUnit(new Position(3, 2), new Position(1, 1));
         assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.BLUE));
     }
 
     @Test
     public void shouldOnlyBeAbleToMoveOwnUnits() {
-        assertThat(game.getUnitAt(new Position(2, 5)).getTypeString(), is("legion"));
-        game.moveUnit(new Position(2, 5), new Position(3, 5));
+        assertThat(game.getUnitAt(new Position(3, 2)).getTypeString(), is("legion"));
+        game.moveUnit(new Position(3, 2), new Position(3, 5));
         assertThat(game.getUnitAt(new Position(3, 5)), nullValue());
     }
 
@@ -248,6 +254,8 @@ public class TestAlphaCiv {
         }
         assertThat(game.getWinner(), is(Player.RED));
     }
+
+    
 
 
     /**
