@@ -134,10 +134,15 @@ public class GameImpl implements Game {
             cityRed.addFood(6);
             cityBlue.addFood(6);
 
-            if(cityRed.getFood()>= 10){
+            if(cityRed.getFood() >=10){
                 UnitImpl archer2 = new UnitImpl(cityRed.getPosition(), "archer", Player.RED);
                 cityRed.addFood(-10);
                 unitMap.put(archer2.getPosition(), archer2);
+            }
+            if (cityBlue.getFood() >= 10){
+                UnitImpl archer3 = new UnitImpl(cityBlue.getPosition(), "archer", Player.BLUE);
+                cityBlue.addFood(-10);
+                unitMap.put(archer3.getPosition(), archer3);
             }
         }
         else{

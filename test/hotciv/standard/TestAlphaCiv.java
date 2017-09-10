@@ -280,6 +280,7 @@ public class TestAlphaCiv {
         assertThat(city.getFood(), is (6));
     }
     @Test
+    //Red city only has 2 food after 10 is used to automatically produce archer
     public void redCityShouldHave12FoodAfter2Rounds() {
         CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
         assertThat(city.getFood(), is (0));
@@ -287,12 +288,12 @@ public class TestAlphaCiv {
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
-        assertThat(city.getFood(), is (12));
+        assertThat(city.getFood(), is (2));
     }
 
     @Test
     public void shouldProduce1ArcherForRed(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -311,6 +312,17 @@ public class TestAlphaCiv {
         assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("archer"));
         assertThat(city.getFood(), is (2));
     }
+
+    @Test
+    public void shouldProduceBlueArcherAfter10Production(){
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(game.getUnitAt(new Position(4,1)).getTypeString(), is("archer"));
+    }
+
+    
 
 
     /**
