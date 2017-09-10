@@ -262,6 +262,15 @@ public class TestAlphaCiv {
         assertThat(game.getTileAt(new Position(15, 15)).getTypeString(), is("plain"));
         assertThat(game.getTileAt(new Position(15, 0)).getTypeString(), is("plain"));
     }
+    @Test
+    public void redCityShouldProduce6Food() {
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        assertThat(city.getFood(), is (0));
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(city.getFood(), is (6));
+
+    }
 
 
     /**

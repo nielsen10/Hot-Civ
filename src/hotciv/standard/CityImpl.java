@@ -12,11 +12,14 @@ public class CityImpl implements City {
 
     private Player player;
     private Position position;
+    private int food;
 
-    public CityImpl(Player color, Position p) {
+    public CityImpl(Player color, Position p ) {
 
         player = color;
         position = p;
+
+
 
     }
 
@@ -46,6 +49,13 @@ public class CityImpl implements City {
 
     public void setPlayer(Player p){
         player = p;
+    }
+    public int getFood() {
+        return food;
+    }
+
+    public void setFood(int food) {
+        this.food = food;
     }
 
 
