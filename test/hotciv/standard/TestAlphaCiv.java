@@ -76,19 +76,19 @@ public class TestAlphaCiv {
     }
 
     @Test
-    public void shouldStartAtYear2000bc() {
-        assertThat(game.getAge(), is(2000));
+    public void shouldStartAtYear4000bc() {
+        assertThat(game.getAge(), is(4000));
     }
 
     @Test
-    public void shouldAddYearAfterLastPlayer() {
+    public void shouldAdd100YearsAfterLastPlayer() {
         assertThat(game.getPlayerInTurn(), is(Player.RED));
-        assertThat(game.getAge(), is(2000));
+        assertThat(game.getAge(), is(4000));
         game.endOfTurn();
         assertThat(game.getPlayerInTurn(), is(Player.BLUE));
         game.endOfTurn();
         assertThat(game.getPlayerInTurn(), is(Player.RED));
-        assertThat(game.getAge(), is(2001));
+        assertThat(game.getAge(), is(3900));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class TestAlphaCiv {
     }
 
     @Test
-    public void shouldBeRedWinnerIfYearGetsTo2010() {
+    public void shouldBeRedWinnerIfYearGetsTo3000() {
         assertThat(game.getWinner(), nullValue());
         for (int i = 0; i < 21; i++) {
             game.endOfTurn();

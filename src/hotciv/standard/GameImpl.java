@@ -59,7 +59,7 @@ public class GameImpl implements Game {
   }
 
   private int playerturn = 1;
-  private int year = 2000;
+  private int year = 4000;
   public Tile getTileAt( Position p ) {
 
     return tileMap.get(p);
@@ -85,7 +85,7 @@ public class GameImpl implements Game {
   }
 
   public Player getWinner() {
-    if(year >= 2010){
+    if(year <= 3000){
       return Player.RED;
     }
     return null; }
@@ -120,7 +120,7 @@ public class GameImpl implements Game {
   }
   public void endOfTurn() {
     if(playerturn == 2){
-      year ++;
+      year -= 100;
       playerturn = 1;
     }
     else{
