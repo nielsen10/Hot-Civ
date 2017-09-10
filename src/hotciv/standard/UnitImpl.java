@@ -9,9 +9,11 @@ import hotciv.framework.Unit;
  */
 public class UnitImpl implements Unit {
 
-    public Position position;
-    public String type;
-    public Player player;
+
+
+    private Position position;
+    private String type;
+    private Player player;
 
     public UnitImpl(Position p, String t, Player pl){
         this.position = p;
@@ -44,5 +46,12 @@ public class UnitImpl implements Unit {
     @Override
     public int getAttackingStrength() {
         return 0;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }

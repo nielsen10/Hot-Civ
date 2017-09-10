@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class TileImpl implements Tile {
 
 
-    public Position position;
-    public String type;
+    private Position position;
+    private String type;
 
     public TileImpl(Position p, String t) {
         this.position = p;
@@ -26,7 +26,8 @@ public class TileImpl implements Tile {
     public String getTypeString() {
         return this.type;
     }
-    public Position getTilePos(){
+    public Position getPosition(){
         return this.position;
     }
+
 }

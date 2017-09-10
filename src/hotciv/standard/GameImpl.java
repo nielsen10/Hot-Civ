@@ -1,9 +1,7 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
-import javafx.geometry.Pos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Skeleton implementation of HotCiv.
@@ -36,27 +34,27 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
-  public CityImpl cityPosRed = new CityImpl(Player.RED, new Position(1,1));
-  public CityImpl cityPosBlue = new CityImpl(Player.BLUE, new Position(10,1));
-  public TileImpl Ocean = new TileImpl(new Position(1,2), "Ocean");
-  public TileImpl Mountain = new TileImpl(new Position(1,3), "Mountain");
-  public TileImpl Plain = new TileImpl(new Position(1,4), "Plain");
-  public TileImpl Hills = new TileImpl(new Position(3,3 ), "Hills");
-  public UnitImpl Archer = new UnitImpl(new Position(2,2), "Archer", Player.RED);
-  public UnitImpl Legion = new UnitImpl(new Position(2,5), "Legion", Player.BLUE);
+  public CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
+  public CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(10,1));
+  public TileImpl ocean = new TileImpl(new Position(1,2), "ocean");
+  public TileImpl mountain = new TileImpl(new Position(1,3), "mountain");
+  public TileImpl plain = new TileImpl(new Position(1,4), "plain");
+  public TileImpl hills = new TileImpl(new Position(3,3 ), "hills");
+  public UnitImpl archer = new UnitImpl(new Position(2,2), "archer", Player.RED);
+  public UnitImpl legion = new UnitImpl(new Position(2,5), "legion", Player.BLUE);
   HashMap<Position,UnitImpl> unitMap = new HashMap();
   HashMap<Position,TileImpl> tileMap = new HashMap();
   HashMap<Position,CityImpl> cityMap = new HashMap();
 
   public GameImpl(){
-    tileMap.put(Ocean.position, Ocean);
-    tileMap.put(Mountain.position, Mountain);
-    tileMap.put(Hills.position, Hills);
-    tileMap.put(Plain.position, Plain);
-    unitMap.put(Archer.position,Archer);
-    unitMap.put(Legion.position, Legion);
-    cityMap.put(cityPosRed.position, cityPosRed);
-    cityMap.put(cityPosBlue.position, cityPosBlue);
+    tileMap.put(ocean.getPosition(), ocean);
+    tileMap.put(mountain.getPosition(), mountain);
+    tileMap.put(hills.getPosition(), hills);
+    tileMap.put(plain.getPosition(), plain);
+    unitMap.put(archer.getPosition(), archer);
+    unitMap.put(legion.getPosition(), legion);
+    cityMap.put(cityRed.getPosition(), cityRed);
+    cityMap.put(cityBlue.getPosition(), cityBlue);
 
   }
 
@@ -101,22 +99,22 @@ public class GameImpl implements Game {
 
     }
     try{
-      if(tileMap.get(to).equals(Ocean) || tileMap.get(to).equals(Mountain)){
+      if(tileMap.get(to).equals(ocean) || tileMap.get(to).equals(mountain)){
         return false;
       }
     } catch (NullPointerException e) {}
 
     try {
       if (cityMap.get(to).getOwner() != getPlayerInTurn()) {
-        cityMap.get(to).player = getPlayerInTurn();
+        cityMap.get(to).setPlayer(getPlayerInTurn());
       }
     }catch (NullPointerException e){
 
     }
     UnitImpl unit = unitMap.get(from);
     unitMap.remove(from, unit);
-    unit.position = to;
-    unitMap.put(unit.position, unit);
+    unit.setPosition(to);
+    unitMap.put(unit.getPosition(), unit);
 
     return true;
   }
