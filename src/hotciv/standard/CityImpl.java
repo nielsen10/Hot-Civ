@@ -35,7 +35,10 @@ public class CityImpl implements City {
 
     @Override
     public String getProduction() {
-        return null;
+        UnitImpl Archer = new UnitImpl(position,"archer", Player.RED);
+
+        return Archer.getTypeString();
+
     }
 
     @Override

@@ -290,6 +290,28 @@ public class TestAlphaCiv {
         assertThat(city.getFood(), is (12));
     }
 
+    @Test
+    public void shouldProduce1ArcherForRed(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("archer"));
+    }
+
+    @Test
+    public void shouldLoose10FoodWhenRedArcherIsProduced(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        assertThat(city.getFood(), is (0));
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("archer"));
+        assertThat(city.getFood(), is (2));
+    }
+
 
     /**
      * REMOVE ME. Not a test of HotCiv, just an example of what

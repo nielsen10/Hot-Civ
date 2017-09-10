@@ -34,17 +34,17 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
-    public CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
-    public CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
-    public TileImpl ocean = new TileImpl(new Position(1,0), "ocean");
-    public TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
-    public TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
-    public UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
-    public UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
-    public UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
-    HashMap<Position,UnitImpl> unitMap = new HashMap();
-    HashMap<Position,TileImpl> tileMap = new HashMap();
-    HashMap<Position,CityImpl> cityMap = new HashMap();
+    private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
+    private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
+    private TileImpl ocean = new TileImpl(new Position(1,0), "ocean");
+    private TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
+    private TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
+    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
+    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
+    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
+    private HashMap<Position,UnitImpl> unitMap = new HashMap();
+    private HashMap<Position,TileImpl> tileMap = new HashMap();
+    private HashMap<Position,CityImpl> cityMap = new HashMap();
 
     public GameImpl(){
         for(int i=0; i<=15; i++) {
@@ -85,7 +85,6 @@ public class GameImpl implements Game {
     }
 
     public Player getPlayerInTurn() {
-
         if(playerturn == 1) {
             return Player.RED;
         }
@@ -132,9 +131,14 @@ public class GameImpl implements Game {
         if(playerturn == 2){
             year -= 100;
             playerturn = 1;
-
             cityRed.addFood(6);
             cityBlue.addFood(6);
+
+            if(cityRed.getFood()>= 10){
+                UnitImpl archer2 = new UnitImpl(cityRed.getPosition(), "archer", Player.RED);
+                cityRed.addFood(-10);
+                unitMap.put(archer2.getPosition(), archer2);
+            }
         }
         else{
             playerturn ++;
