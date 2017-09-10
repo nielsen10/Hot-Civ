@@ -69,7 +69,7 @@ public class GameImpl implements Game {
     private int year = 4000;
     public Tile getTileAt( Position p ) {
 
-        getCityAt(new Position(1,1)).getFood();
+
 
         return tileMap.get(p);
 
@@ -80,7 +80,7 @@ public class GameImpl implements Game {
     }
 
 
-    public CityImpl getCityAt( Position p ) {
+    public City getCityAt( Position p ) {
         return cityMap.get(p);
     }
 
@@ -133,6 +133,7 @@ public class GameImpl implements Game {
             year -= 100;
             playerturn = 1;
             cityRed.setFood(6);
+            cityBlue.setFood(6);
         }
         else{
             playerturn ++;

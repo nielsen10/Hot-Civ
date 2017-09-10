@@ -271,6 +271,15 @@ public class TestAlphaCiv {
         assertThat(city.getFood(), is (6));
 
     }
+    @Test
+    public void blueCityShouldProduce6Food() {
+        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        assertThat(city.getFood(), is (0));
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(city.getFood(), is (6));
+
+    }
 
 
     /**
