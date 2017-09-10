@@ -54,8 +54,8 @@ public class CityImpl implements City {
         return food;
     }
 
-    public void setFood(int food) {
-        this.food = food;
+    public void addFood(int food) {
+        this.food += food;
     }
 
 

@@ -278,7 +278,16 @@ public class TestAlphaCiv {
         game.endOfTurn();
         game.endOfTurn();
         assertThat(city.getFood(), is (6));
-
+    }
+    @Test
+    public void redCityShouldHave12FoodAfter2Rounds() {
+        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        assertThat(city.getFood(), is (0));
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(city.getFood(), is (12));
     }
 
 

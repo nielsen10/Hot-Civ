@@ -132,8 +132,9 @@ public class GameImpl implements Game {
         if(playerturn == 2){
             year -= 100;
             playerturn = 1;
-            cityRed.setFood(6);
-            cityBlue.setFood(6);
+
+            cityRed.addFood(6);
+            cityBlue.addFood(6);
         }
         else{
             playerturn ++;
