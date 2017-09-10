@@ -255,7 +255,13 @@ public class TestAlphaCiv {
         assertThat(game.getWinner(), is(Player.RED));
     }
 
-    
+    @Test
+    public void shouldBePlainsEverywhere() {
+        assertThat(game.getTileAt(new Position(0, 0)).getTypeString(), is("plain"));
+        assertThat(game.getTileAt(new Position(5, 7)).getTypeString(), is("plain"));
+        assertThat(game.getTileAt(new Position(15, 15)).getTypeString(), is("plain"));
+        assertThat(game.getTileAt(new Position(15, 0)).getTypeString(), is("plain"));
+    }
 
 
     /**
