@@ -107,7 +107,7 @@ public class GameImpl implements Game {
     }
 
     public Player getWinner() {
-        if(year <= 2000){
+        if(year <= 3000){
             return Player.RED;
         }
         return null; }
