@@ -13,6 +13,7 @@ public class CityImpl implements City {
     private Player player;
     private Position position;
     private int food;
+    private String production;
 
     public CityImpl(Player color, Position p ) {
 
@@ -35,10 +36,11 @@ public class CityImpl implements City {
 
     @Override
     public String getProduction() {
-        UnitImpl Archer = new UnitImpl(position,"archer", Player.RED);
+        return production;
+    }
 
-        return Archer.getTypeString();
-
+    public void setProduction(String production) {
+        this.production = production;
     }
 
     @Override

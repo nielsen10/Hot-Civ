@@ -322,7 +322,25 @@ public class TestAlphaCiv {
         assertThat(game.getUnitAt(new Position(4,1)).getTypeString(), is("archer"));
     }
 
-    
+    @Test
+    public void shouldBeAbleToChangeTroopProductionToArcher(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        assertThat(city.getProduction(), nullValue());
+        city.setProduction("archer");
+        assertThat(city.getProduction(), is("archer"));
+    }
+
+    @Test
+    public void shouldBeAbleToChangeTroopProductionToLegion(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        assertThat(city.getProduction(), nullValue());
+        city.setProduction("legion");
+        assertThat(city.getProduction(), is("legion"));
+    }
+
+
+
+
 
 
     /**
