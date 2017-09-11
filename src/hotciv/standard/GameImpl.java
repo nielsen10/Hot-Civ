@@ -2,6 +2,8 @@ package hotciv.standard;
 
 import hotciv.framework.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** Skeleton implementation of HotCiv.
@@ -45,6 +47,7 @@ public class GameImpl implements Game {
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
+    private ArrayList<Position> spawnArray = new ArrayList<>();
 
     public GameImpl(){
         for(int i=0; i<=15; i++) {
@@ -61,6 +64,9 @@ public class GameImpl implements Game {
         unitMap.put(settler.getPosition(), settler);
         cityMap.put(cityRed.getPosition(), cityRed);
         cityMap.put(cityBlue.getPosition(), cityBlue);
+
+        spawnArray.add(new Position(0,0));
+        spawnArray.add(new Position(-1,0));
 
 
     }
@@ -137,7 +143,7 @@ public class GameImpl implements Game {
             if(cityRed.getProduction() == "legion") { cost = 15; }
             else if(cityRed.getProduction() == "archer") { cost = 10; }
             if(cityRed.getTreasury() >= cost) {
-                UnitImpl newRedUnit = new UnitImpl(cityRed.getPosition(),cityRed.getProduction(), Player.RED);
+                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
                 cityRed.addTreasury(-cost);
                 unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
@@ -145,7 +151,7 @@ public class GameImpl implements Game {
             if(cityBlue.getProduction() == "legion") { cost = 15; }
             else if(cityBlue.getProduction() == "archer") { cost = 10; }
             if (cityBlue.getTreasury() >= cost) {
-                UnitImpl newBlueUnit = new UnitImpl(cityBlue.getPosition(),cityBlue.getProduction(), Player.BLUE);
+                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
                 cityBlue.addTreasury(-cost);
                 unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
             }
@@ -161,6 +167,18 @@ public class GameImpl implements Game {
         city.setProduction(unitType);
     }
     public void performUnitActionAt( Position p ) {}
+
+    public Position positionForNewUnit (Position p){
+        for (Position pos: spawnArray) {
+            int column = p.getColumn()+pos.getColumn();
+            int row = p.getRow()+pos.getRow();
+            Position validPos = new Position(row,column);
+            if(getUnitAt(validPos)==null) {
+                return validPos;
+            }
+        }
+        return null;
+    }
 
 
 }

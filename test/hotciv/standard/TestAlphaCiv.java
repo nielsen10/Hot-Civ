@@ -362,4 +362,18 @@ public class TestAlphaCiv {
         assertThat(game.getUnitAt(new Position(4,1)).getTypeString(), is("legion"));
     }
 
+    @Test
+    public void shouldProduce2ArcherForRed(){
+        game.changeProductionInCityAt(rCity.getPosition(),"archer");
+        assertThat(game.getUnitAt(new Position(1,1)), nullValue());
+        assertThat(game.getUnitAt(new Position(0,1)), nullValue());
+        assertThat(rCity.getTreasury(), is (0));
+        for (int i = 0; i < 8; i++) {
+            game.endOfTurn();
+        }
+        assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("archer"));
+        assertThat(game.getUnitAt(new Position(0,1)).getTypeString(), is("archer"));
+        assertThat(rCity.getTreasury(), is (4)); //6 Production pr round, for four rounds 6*4=24 -2*10 = 4
+    }
+
 }
