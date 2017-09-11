@@ -355,8 +355,19 @@ public class TestAlphaCiv {
         assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("legion"));
     }
 
-
-
+    @Test
+    public void shouldProduce1LegionForBlue(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        city.setProduction("legion");
+        assertThat(game.getUnitAt(new Position(4,1)), nullValue());
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(game.getUnitAt(new Position(4,1)).getTypeString(), is("legion"));
+    }
 
 
 

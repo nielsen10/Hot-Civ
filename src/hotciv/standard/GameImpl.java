@@ -136,15 +136,18 @@ public class GameImpl implements Game {
             int cost = 0;
             if(cityRed.getProduction() == "legion") { cost = 15; }
             else if(cityRed.getProduction() == "archer") { cost = 10; }
-            if(cityRed.getFood() >=cost){
-                UnitImpl newUnit = new UnitImpl(cityRed.getPosition(),cityRed.getProduction(), Player.RED);
+            if(cityRed.getFood() >= cost) {
+                UnitImpl newRedUnit = new UnitImpl(cityRed.getPosition(),cityRed.getProduction(), Player.RED);
                 cityRed.addFood(-cost);
-                unitMap.put(newUnit.getPosition(), newUnit);
+                unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
-            if (cityBlue.getFood() >= 10){
-                UnitImpl archer3 = new UnitImpl(cityBlue.getPosition(), "archer", Player.BLUE);
-                cityBlue.addFood(-10);
-                unitMap.put(archer3.getPosition(), archer3);
+            cost = 0;
+            if(cityBlue.getProduction() == "legion") { cost = 15; }
+            else if(cityBlue.getProduction() == "archer") { cost = 10; }
+            if (cityBlue.getFood() >= cost) {
+                UnitImpl newBlueUnit = new UnitImpl(cityBlue.getPosition(),cityBlue.getProduction(), Player.BLUE);
+                cityBlue.addFood(-cost);
+                unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
             }
         }
         else{
