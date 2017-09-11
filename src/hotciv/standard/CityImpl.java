@@ -3,7 +3,6 @@ package hotciv.standard;
 import hotciv.framework.City;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
-import javafx.geometry.Pos;
 
 /**
  * Created by csdev on 8/28/17.
@@ -12,7 +11,7 @@ public class CityImpl implements City {
 
     private Player player;
     private Position position;
-    private int food;
+    private int treasury;
     private String production;
 
     public CityImpl(Player color, Position p ) {
@@ -55,12 +54,12 @@ public class CityImpl implements City {
     public void setPlayer(Player p){
         player = p;
     }
-    public int getFood() {
-        return food;
+    public int getTreasury() {
+        return treasury;
     }
 
-    public void addFood(int food) {
-        this.food += food;
+    public void addTreasury(int food) {
+        this.treasury += food;
     }
 
 

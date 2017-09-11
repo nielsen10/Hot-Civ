@@ -131,22 +131,22 @@ public class GameImpl implements Game {
         if(playerturn == 2){
             year -= 100;
             playerturn = 1;
-            cityRed.addFood(6);
-            cityBlue.addFood(6);
+            cityRed.addTreasury(6);
+            cityBlue.addTreasury(6);
             int cost = 0;
             if(cityRed.getProduction() == "legion") { cost = 15; }
             else if(cityRed.getProduction() == "archer") { cost = 10; }
-            if(cityRed.getFood() >= cost) {
+            if(cityRed.getTreasury() >= cost) {
                 UnitImpl newRedUnit = new UnitImpl(cityRed.getPosition(),cityRed.getProduction(), Player.RED);
-                cityRed.addFood(-cost);
+                cityRed.addTreasury(-cost);
                 unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
             cost = 0;
             if(cityBlue.getProduction() == "legion") { cost = 15; }
             else if(cityBlue.getProduction() == "archer") { cost = 10; }
-            if (cityBlue.getFood() >= cost) {
+            if (cityBlue.getTreasury() >= cost) {
                 UnitImpl newBlueUnit = new UnitImpl(cityBlue.getPosition(),cityBlue.getProduction(), Player.BLUE);
-                cityBlue.addFood(-cost);
+                cityBlue.addTreasury(-cost);
                 unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
             }
         }
@@ -156,7 +156,10 @@ public class GameImpl implements Game {
 
     }
     public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
-    public void changeProductionInCityAt( Position p, String unitType ) {}
+    public void changeProductionInCityAt( Position p, String unitType ) {
+        CityImpl city = (CityImpl) getCityAt(p);
+        city.setProduction(unitType);
+    }
     public void performUnitActionAt( Position p ) {}
 
 

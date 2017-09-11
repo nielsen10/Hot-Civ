@@ -1,14 +1,11 @@
 package hotciv.standard;
 
-import com.sun.istack.internal.NotNull;
 import hotciv.framework.*;
 
 import org.junit.*;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
-
-import java.util.*;
 
 /**
  * Skeleton class for AlphaCiv test cases
@@ -40,6 +37,8 @@ import java.util.*;
  */
 public class TestAlphaCiv {
     private Game game;
+    private City rCity;
+    private City bCity;
 
     /**
      * Fixture for alphaciv testing.
@@ -48,6 +47,8 @@ public class TestAlphaCiv {
     public void setUp() {
 
         game = new GameImpl();
+        rCity = game.getCityAt(new Position(1,1));
+        bCity = game.getCityAt(new Position(4,1));
     }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -56,6 +57,8 @@ public class TestAlphaCiv {
         assertThat(game, is(notNullValue()));
         // TODO: reenable the assert below to get started...
         assertThat(game.getPlayerInTurn(), is(Player.RED));
+
+
 
 
     }
@@ -92,26 +95,26 @@ public class TestAlphaCiv {
     }
 
     @Test
-    public void shoudlBeRedCityStartingPos() {
-        assertThat(game.getCityAt(new Position(1, 1)), is(notNullValue()));
-        assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.RED));
+    public void shouldBeRedCityStartingPos() {
+        assertThat(rCity, is(notNullValue()));
+        assertThat(rCity.getOwner(), is(Player.RED));
     }
 
     @Test
-    public void shoudlBeBlueCityStartingPos() {
+    public void shouldBeBlueCityStartingPos() {
         game.endOfTurn();
-        assertThat(game.getCityAt(new Position(4, 1)), is(notNullValue()));
-        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.BLUE));
+        assertThat(bCity, is(notNullValue()));
+        assertThat(bCity.getOwner(), is(Player.BLUE));
     }
 
     @Test
     public void shouldBeRedCityPopulationAlways1() {
-        assertThat(game.getCityAt(new Position(1, 1)).getSize(), is(1));
+        assertThat(rCity.getSize(), is(1));
     }
 
     @Test
     public void shouldBeBlueCityPopulationAlways1() {
-        assertThat(game.getCityAt(new Position(4, 1)).getSize(), is(1));
+        assertThat(bCity.getSize(), is(1));
     }
 
     @Test
@@ -219,24 +222,24 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldBeRedCityEvenWhenItIsBluesTurn() {
-        assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.RED));
+        assertThat(rCity.getOwner(), is(Player.RED));
         game.endOfTurn();
-        assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.RED));
+        assertThat(rCity.getOwner(), is(Player.RED));
     }
 
     @Test
     public void shouldOvertakeBlueCity() {
-        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.BLUE));
+        assertThat(bCity.getOwner(), is(Player.BLUE));
         game.moveUnit(new Position(2, 0), new Position(4, 1));
-        assertThat(game.getCityAt(new Position(4, 1)).getOwner(), is(Player.RED));
+        assertThat(bCity.getOwner(), is(Player.RED));
     }
 
     @Test
     public void shouldOvertakeRedCity() {
         game.endOfTurn();
-        assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.RED));
+        assertThat(rCity.getOwner(), is(Player.RED));
         game.moveUnit(new Position(3, 2), new Position(1, 1));
-        assertThat(game.getCityAt(new Position(1, 1)).getOwner(), is(Player.BLUE));
+        assertThat(rCity.getOwner(), is(Player.BLUE));
     }
 
     @Test
@@ -264,36 +267,32 @@ public class TestAlphaCiv {
     }
     @Test
     public void redCityShouldProduce6Food() {
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        assertThat(city.getFood(), is (0));
+        assertThat(rCity.getTreasury(), is (0));
         game.endOfTurn();
         game.endOfTurn();
-        assertThat(city.getFood(), is (6));
+        assertThat(rCity.getTreasury(), is (6));
 
     }
     @Test
     public void blueCityShouldProduce6Food() {
-        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
-        assertThat(city.getFood(), is (0));
+        assertThat(bCity.getTreasury(), is (0));
         game.endOfTurn();
         game.endOfTurn();
-        assertThat(city.getFood(), is (6));
+        assertThat(bCity.getTreasury(), is (6));
     }
     @Test
     public void redCityShouldHave12FoodAfter2Rounds() {
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        assertThat(city.getFood(), is (0));
+        assertThat(rCity.getTreasury(), is (0));
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
-        assertThat(city.getFood(), is (12));
+        assertThat(rCity.getTreasury(), is (12));
     }
 
     @Test
     public void shouldProduce1ArcherForRed(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        city.setProduction("archer");
+        game.changeProductionInCityAt(rCity.getPosition(),"archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -303,21 +302,19 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldLoose10FoodWhenRedArcherIsProduced(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        assertThat(city.getFood(), is (0));
-        city.setProduction("archer");
+        assertThat(rCity.getTreasury(), is (0));
+        game.changeProductionInCityAt(rCity.getPosition(),"archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
         assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("archer"));
-        assertThat(city.getFood(), is (2));
+        assertThat(rCity.getTreasury(), is (2));
     }
 
     @Test
     public void shouldProduceBlueArcherAfter10Production(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
-        city.setProduction("archer");
+        game.changeProductionInCityAt(bCity.getPosition(),"archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -327,24 +324,21 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldBeAbleToChangeTroopProductionToArcher(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        assertThat(city.getProduction(), nullValue());
-        city.setProduction("archer");
-        assertThat(city.getProduction(), is("archer"));
+        assertThat(rCity.getProduction(), nullValue());
+        game.changeProductionInCityAt(rCity.getPosition(),"archer");
+        assertThat(rCity.getProduction(), is("archer"));
     }
 
     @Test
     public void shouldBeAbleToChangeTroopProductionToLegion(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        assertThat(city.getProduction(), nullValue());
-        city.setProduction("legion");
-        assertThat(city.getProduction(), is("legion"));
+        assertThat(rCity.getProduction(), nullValue());
+        game.changeProductionInCityAt(rCity.getPosition(),"legion");
+        assertThat(rCity.getProduction(), is("legion"));
     }
 
     @Test
     public void shouldProduce1LegionForRed(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
-        city.setProduction("legion");
+        game.changeProductionInCityAt(rCity.getPosition(),"legion");
         assertThat(game.getUnitAt(new Position(1,1)), nullValue());
         game.endOfTurn();
         game.endOfTurn();
@@ -357,8 +351,7 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldProduce1LegionForBlue(){
-        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
-        city.setProduction("legion");
+        game.changeProductionInCityAt(bCity.getPosition(),"legion");
         assertThat(game.getUnitAt(new Position(4,1)), nullValue());
         game.endOfTurn();
         game.endOfTurn();
@@ -369,33 +362,4 @@ public class TestAlphaCiv {
         assertThat(game.getUnitAt(new Position(4,1)).getTypeString(), is("legion"));
     }
 
-
-
-    /**
-     * REMOVE ME. Not a test of HotCiv, just an example of what
-     * matchers the hamcrest library has...
-     */
-    @Test
-    public void shouldDefinetelyBeRemoved() {
-        // Matching null and not null values
-        // 'is' require an exact match
-        String s = null;
-        assertThat(s, is(nullValue()));
-        s = "Ok";
-        assertThat(s, is(notNullValue()));
-        assertThat(s, is("Ok"));
-
-        // If you only validate substrings, use containsString
-        assertThat("This is a dummy test", containsString("dummy"));
-
-        // Match contents of Lists
-        List<String> l = new ArrayList<String>();
-        l.add("Bimse");
-        l.add("Bumse");
-        // Note - ordering is ignored when matching using hasItems
-        assertThat(l, hasItems(new String[]{"Bumse", "Bimse"}));
-
-        // Matchers may be combined, like is-not
-        assertThat(l.get(0), is(not("Bumse")));
-    }
 }
