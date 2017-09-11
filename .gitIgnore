@@ -36,6 +36,9 @@ cmake-build-debug/
 
 # IntelliJ
 /out/
+/build/
+/TEST-RESULT/
+/javadoc/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -64,6 +67,3 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/intellij
-/build/
-/TEST-RESULT/
-/javadoc/
