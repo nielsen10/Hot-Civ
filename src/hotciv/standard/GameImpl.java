@@ -67,6 +67,13 @@ public class GameImpl implements Game {
 
         spawnArray.add(new Position(0,0));
         spawnArray.add(new Position(-1,0));
+        spawnArray.add(new Position(-1,1));
+        spawnArray.add(new Position(0,1));
+        spawnArray.add(new Position(1,1));
+        spawnArray.add(new Position(1,0));
+        spawnArray.add(new Position(1,-1));
+        spawnArray.add(new Position(0,-1));
+        spawnArray.add(new Position(-1,-1));
 
 
     }
