@@ -133,11 +133,13 @@ public class GameImpl implements Game {
             playerturn = 1;
             cityRed.addFood(6);
             cityBlue.addFood(6);
-
-            if(cityRed.getFood() >=10){
-                UnitImpl archer2 = new UnitImpl(cityRed.getPosition(), "archer", Player.RED);
-                cityRed.addFood(-10);
-                unitMap.put(archer2.getPosition(), archer2);
+            int cost = 0;
+            if(cityRed.getProduction() == "legion") { cost = 15; }
+            else if(cityRed.getProduction() == "archer") { cost = 10; }
+            if(cityRed.getFood() >=cost){
+                UnitImpl newUnit = new UnitImpl(cityRed.getPosition(),cityRed.getProduction(), Player.RED);
+                cityRed.addFood(-cost);
+                unitMap.put(newUnit.getPosition(), newUnit);
             }
             if (cityBlue.getFood() >= 10){
                 UnitImpl archer3 = new UnitImpl(cityBlue.getPosition(), "archer", Player.BLUE);

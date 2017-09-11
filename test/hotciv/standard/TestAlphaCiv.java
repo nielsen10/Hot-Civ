@@ -280,20 +280,20 @@ public class TestAlphaCiv {
         assertThat(city.getFood(), is (6));
     }
     @Test
-    //Red city only has 2 food after 10 is used to automatically produce archer
     public void redCityShouldHave12FoodAfter2Rounds() {
-        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
         assertThat(city.getFood(), is (0));
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
-        assertThat(city.getFood(), is (2));
+        assertThat(city.getFood(), is (12));
     }
 
     @Test
     public void shouldProduce1ArcherForRed(){
         CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        city.setProduction("archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -305,6 +305,7 @@ public class TestAlphaCiv {
     public void shouldLoose10FoodWhenRedArcherIsProduced(){
         CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
         assertThat(city.getFood(), is (0));
+        city.setProduction("archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -315,6 +316,8 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldProduceBlueArcherAfter10Production(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(4,1));
+        city.setProduction("archer");
         game.endOfTurn();
         game.endOfTurn();
         game.endOfTurn();
@@ -336,6 +339,20 @@ public class TestAlphaCiv {
         assertThat(city.getProduction(), nullValue());
         city.setProduction("legion");
         assertThat(city.getProduction(), is("legion"));
+    }
+
+    @Test
+    public void shouldProduce1LegionForRed(){
+        CityImpl city = (CityImpl) game.getCityAt(new Position(1,1));
+        city.setProduction("legion");
+        assertThat(game.getUnitAt(new Position(1,1)), nullValue());
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        game.endOfTurn();
+        assertThat(game.getUnitAt(new Position(1,1)).getTypeString(), is("legion"));
     }
 
 
