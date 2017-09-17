@@ -44,7 +44,7 @@ public class GameImpl implements Game {
     private AgingStrategy agingStrategy;
     private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
     private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
-    private TileImpl ocean = new TileImpl(new Position(1,0), "ocean");
+    private TileImpl ocean = new TileImpl(new Position(1,0), GameConstants.OCEANS);
     private TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
     private TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
     private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
@@ -150,6 +150,7 @@ public class GameImpl implements Game {
             int cost = 0;
             if(cityRed.getProduction() == "legion") { cost = 15; }
             else if(cityRed.getProduction() == "archer") { cost = 10; }
+            else if(cityRed.getProduction() == "settler") { cost = 30;}
             if(cityRed.getTreasury() >= cost) {
                 UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
                 cityRed.addTreasury(-cost);
@@ -158,6 +159,7 @@ public class GameImpl implements Game {
             cost = 0;
             if(cityBlue.getProduction() == "legion") { cost = 15; }
             else if(cityBlue.getProduction() == "archer") { cost = 10; }
+            else if(cityBlue.getProduction() == "settler") { cost = 30; }
             if (cityBlue.getTreasury() >= cost) {
                 UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
                 cityBlue.addTreasury(-cost);
@@ -179,7 +181,7 @@ public class GameImpl implements Game {
     }
 
     public void performUnitActionAt( Position p ) {
-        unitActionStrategy.performUnitActionAt(p, this, unitMap, cityMap  );
+        unitActionStrategy.performUnitActionAt(p, this, unitMap, cityMap);
     }
 
     public Position positionForNewUnit (Position p){

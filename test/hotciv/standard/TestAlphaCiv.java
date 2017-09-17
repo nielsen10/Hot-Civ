@@ -48,6 +48,8 @@ public class TestAlphaCiv {
     private City betaRCity;
     private City betaBCity;
     private GameImpl gammaGame;
+    private City gammaRCity;
+    private City gammaBCity;
 
     /**
      * Fixture for alphaciv testing.
@@ -62,6 +64,8 @@ public class TestAlphaCiv {
         bCity = alphaGame.getCityAt(new Position(4,1));
         betaRCity = betaGame.getCityAt(new Position(1,1));
         betaBCity = betaGame.getCityAt(new Position(4,1));
+        gammaRCity = betaGame.getCityAt(new Position(1,1));
+        gammaBCity = betaGame.getCityAt(new Position(4,1));
     }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -505,5 +509,44 @@ public class TestAlphaCiv {
         assertThat(gammaGame.getUnitAt(new Position(4,3)), is(nullValue()));
         assertThat(gammaGame.getCityAt(new Position(4,3)).getOwner(), is(Player.RED));
     }
+    @Test
+    public void blueCityCanProduceSettler(){
+        gammaGame.changeProductionInCityAt(gammaBCity.getPosition(), "settler");
+        assertThat(gammaGame.getUnitAt(new Position(4,1)), nullValue());
+        for(int i = 0; i <101; i ++ ){ gammaGame.endOfTurn();}
+        assertThat(gammaGame.getUnitAt(new Position(4,1)).getTypeString(), is("settler"));
+    }
+    @Test
+    public void blueCityCanProduceSettlerAndItCanMoveAndMakeNewCity(){
+        gammaGame.changeProductionInCityAt(bCity.getPosition(), "settler");
+        assertThat(gammaGame.getUnitAt(new Position(4,1)), nullValue());
+        for(int i = 0; i < 40; i++){gammaGame.endOfTurn();}
+        assertThat(gammaGame.getUnitAt(new Position(4,1)).getTypeString(), is("settler"));
+        gammaGame.moveUnit(new Position(4,1), new Position(4,2));
+        gammaGame.performUnitActionAt(new Position(4,2));
+    }
+    @Test
+    public void redSettlerActionShouldMakeCityAndPopulation1(){
+        gammaGame.performUnitActionAt(new Position(4,3));
+        assertThat(gammaGame.getUnitAt(new Position(4,3)), is(nullValue()));
+        assertThat(gammaGame.getCityAt(new Position(4,3)).getOwner(), is(Player.RED));
+        assertThat(gammaGame.getCityAt(new Position(4,3)).getSize(), is(1));
+    }
+
+    @Test
+    public void shouldDoubleArcherDefenceStrengthWhenFortify(){
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        gammaGame.performUnitActionAt(new Position(2,0));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+    }
+    @Test
+    public void shouldNotBeAbleToMoveFortifiedArcher(){
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        gammaGame.performUnitActionAt(new Position(2,0));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+        gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
+        assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
+    }
+
 
 }
