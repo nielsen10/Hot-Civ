@@ -9,6 +9,6 @@ import hotciv.standard.GameImpl;
 public class BetaWinningStrategy implements WinningStrategy {
     @Override
     public Player getWinner(GameImpl game) {
-        return null;
+        return Player.RED;
     }
 }

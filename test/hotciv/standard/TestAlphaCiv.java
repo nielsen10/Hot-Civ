@@ -44,6 +44,8 @@ public class TestAlphaCiv {
     private City rCity;
     private City bCity;
     private Game betaGame;
+    private City betaRCity;
+    private City betaBCity;
 
     /**
      * Fixture for alphaciv testing.
@@ -55,6 +57,8 @@ public class TestAlphaCiv {
         betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy());
         rCity = alphaGame.getCityAt(new Position(1,1));
         bCity = alphaGame.getCityAt(new Position(4,1));
+        betaRCity = betaGame.getCityAt(new Position(1,1));
+        betaBCity = betaGame.getCityAt(new Position(4,1));
     }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -476,6 +480,21 @@ public class TestAlphaCiv {
         betaGame.endOfTurn();
         betaGame.endOfTurn();
         assertThat(betaGame.getAge(), is(1971));
+    }
+    @Test
+    public void redShouldWinGameIfBlueCityIsTaken(){
+        assertThat(betaBCity.getOwner(), is(Player.BLUE));
+        betaGame.moveUnit(new Position(2, 0), new Position(4, 1));
+        assertThat(betaBCity.getOwner(), is(Player.RED));
+        assertThat(betaGame.getWinner(), is (Player.RED));
+    }
+    @Test
+    public void blueShouldWinGameIfRedCityIsTaken(){
+        betaGame.endOfTurn();
+        assertThat(betaRCity.getOwner(), is(Player.RED));
+        betaGame.moveUnit(new Position(3, 2), new Position(1, 1));
+        assertThat(betaRCity.getOwner(), is(Player.BLUE));
+        assertThat(betaGame.getWinner(), is (Player.BLUE));
     }
 
 }
