@@ -1,9 +1,9 @@
 package hotciv.standard;
 
+import Strategies.WinningStrategies.WinningStrategy;
 import hotciv.framework.*;
-import hotciv.framework.Strategies.AgingStrategy.AgingStrategy;
+import Strategies.AgingStrategies.AgingStrategy;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,6 +37,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
     private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
     private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
@@ -53,13 +54,14 @@ public class GameImpl implements Game {
     private int playerturn = 1;
     private int year = -4000;
 
-    public GameImpl(AgingStrategy agingStrategy){
+    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy){
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
                 Position pos = new Position(i,j);
                 tileMap.put(pos, new TileImpl(pos, "plain"));
             }
         }
+        this.winningStrategy = winningStrategy;
         this.agingStrategy = agingStrategy;
         tileMap.put(ocean.getPosition(), ocean);
         tileMap.put(mountain.getPosition(), mountain);
@@ -106,10 +108,9 @@ public class GameImpl implements Game {
     }
 
     public Player getWinner() {
-        if(year >= -3000){
-            return Player.RED;
-        }
-        return null; }
+        return winningStrategy.getWinner(this);
+    }
+
     public int getAge() { return year; }
 
     public boolean moveUnit( Position from, Position to ) {
@@ -138,7 +139,7 @@ public class GameImpl implements Game {
 
     public void endOfTurn() {
         if(playerturn == 2){
-            year += agingStrategy.endOfTurn(year);
+            year += agingStrategy.endOfTurn(this);
             playerturn = 1;
             cityRed.addTreasury(6);
             cityBlue.addTreasury(6);
@@ -158,6 +159,7 @@ public class GameImpl implements Game {
                 cityBlue.addTreasury(-cost);
                 unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
             }
+            getWinner();
         }
         else{
             playerturn ++;

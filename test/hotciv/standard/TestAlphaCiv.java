@@ -1,9 +1,11 @@
 package hotciv.standard;
 
+import Strategies.WinningStrategies.AlphaWinningStrategy;
+import Strategies.WinningStrategies.BetaWinningStrategy;
 import hotciv.framework.*;
 
-import hotciv.framework.Strategies.AgingStrategy.AlphaAgingStrategy;
-import hotciv.framework.Strategies.AgingStrategy.BetaAgingStrategy;
+import Strategies.AgingStrategies.AlphaAgingStrategy;
+import Strategies.AgingStrategies.BetaAgingStrategy;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -49,8 +51,8 @@ public class TestAlphaCiv {
     @Before
     public void setUp() {
 
-        alphaGame = new GameImpl(new AlphaAgingStrategy());
-        betaGame = new GameImpl(new BetaAgingStrategy());
+        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy());
+        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy());
         rCity = alphaGame.getCityAt(new Position(1,1));
         bCity = alphaGame.getCityAt(new Position(4,1));
     }
@@ -392,15 +394,88 @@ public class TestAlphaCiv {
     }
 
     @Test
-    public void shouldPass100yearsUnitil100BC(){
+    public void shouldPass100years(){
         assertThat(betaGame.getAge(), is(-4000));
         betaGame.endOfTurn();
         betaGame.endOfTurn();
         assertThat(betaGame.getAge(), is(-3900));
     }
 
+    @Test
+    public void shouldPassTo1BCAfter100BC() {
+        for (int i = 0; i < 78; i++) { //78 because 4000-100 = 3900 / 100, 39 turns, so 39*2 to switch both players turns
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(-100));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(-1));
+    }
 
+    @Test
+    public void shouldPassTo1ADAfter1BC() {
+        for (int i = 0; i < 80; i++) { //80 because previous 78 plus 2 more switches
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(-1));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(1));
+    }
 
+    @Test
+    public void shouldPassTo50ADAfter1AD() {
+        for (int i = 0; i < 82; i++) { //82 because previous 80 plus 2 more switches
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(1));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(50));
+    }
 
+    @Test
+    public void shouldPass50YearsAfter50AD() {
+        for (int i = 0; i < 84; i++) { //84 because previous 82 plus 2 more switches
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(50));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(100));
+    }
+
+    @Test
+    public void shouldPass25YearsAfter1750AD() {
+        for (int i = 0; i < 152; i++) { //152 because previous 84 plus 68 more switches (1750-50 = 1700 /50 = 34 *2 = 68.
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(1750));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(1775));
+    }
+
+    @Test
+    public void shouldPass5YearsAfter1900AD() {
+        for (int i = 0; i < 164; i++) { //64 because previous 152 plus 12 more switches (1900-1750 = 150 /25 = 6 *2 = 12.
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(1900));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(1905));
+    }
+
+    @Test
+    public void shouldPass1YearsAfter1970AD() {
+        for (int i = 0; i < 192; i++) { //192 because previous 164 plus 28 more switches (1970-1900 = 70 /5 = 14 *2 = 28.
+            betaGame.endOfTurn();
+        }
+        assertThat(betaGame.getAge(), is(1970));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        assertThat(betaGame.getAge(), is(1971));
+    }
 
 }
