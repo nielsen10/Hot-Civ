@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 import hotciv.framework.*;
+import hotciv.framework.Strategies.AgingStrategy.AgingStrategy;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private AgingStrategy agingStrategy;
     private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
     private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
     private TileImpl ocean = new TileImpl(new Position(1,0), "ocean");
@@ -48,14 +50,17 @@ public class GameImpl implements Game {
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
     private ArrayList<Position> spawnArray = new ArrayList<>();
+    private int playerturn = 1;
+    private int year = -4000;
 
-    public GameImpl(){
+    public GameImpl(AgingStrategy agingStrategy){
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
                 Position pos = new Position(i,j);
                 tileMap.put(pos, new TileImpl(pos, "plain"));
             }
         }
+        this.agingStrategy = agingStrategy;
         tileMap.put(ocean.getPosition(), ocean);
         tileMap.put(mountain.getPosition(), mountain);
         tileMap.put(hills.getPosition(), hills);
@@ -78,20 +83,14 @@ public class GameImpl implements Game {
 
     }
 
-    private int playerturn = 1;
-    private int year = 4000;
+
     public Tile getTileAt( Position p ) {
-
-
-
         return tileMap.get(p);
-
     }
 
     public Unit getUnitAt( Position p ) {
         return unitMap.get(p);
     }
-
 
     public City getCityAt( Position p ) {
         return cityMap.get(p);
@@ -107,32 +106,28 @@ public class GameImpl implements Game {
     }
 
     public Player getWinner() {
-        if(year <= 3000){
+        if(year >= -3000){
             return Player.RED;
         }
         return null; }
     public int getAge() { return year; }
+
     public boolean moveUnit( Position from, Position to ) {
         try {
             if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
                 return false;
             }
-        } catch (NullPointerException e){
-
-        }
+        } catch (NullPointerException e){}
         try{
             if(tileMap.get(to).equals(ocean) || tileMap.get(to).equals(mountain)){
                 return false;
             }
         } catch (NullPointerException e) {}
-
         try {
             if (cityMap.get(to).getOwner() != getPlayerInTurn()) {
                 cityMap.get(to).setPlayer(getPlayerInTurn());
             }
-        }catch (NullPointerException e){
-
-        }
+        }catch (NullPointerException e) {}
         UnitImpl unit = unitMap.get(from);
         unitMap.remove(from, unit);
         unit.setPosition(to);
@@ -140,9 +135,10 @@ public class GameImpl implements Game {
 
         return true;
     }
+
     public void endOfTurn() {
         if(playerturn == 2){
-            year -= 100;
+            year += agingStrategy.endOfTurn(year);
             playerturn = 1;
             cityRed.addTreasury(6);
             cityBlue.addTreasury(6);
@@ -168,11 +164,14 @@ public class GameImpl implements Game {
         }
 
     }
+
     public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
+
     public void changeProductionInCityAt( Position p, String unitType ) {
         CityImpl city = (CityImpl) getCityAt(p);
         city.setProduction(unitType);
     }
+
     public void performUnitActionAt( Position p ) {}
 
     public Position positionForNewUnit (Position p){
@@ -186,6 +185,4 @@ public class GameImpl implements Game {
         }
         return null;
     }
-
-
 }
