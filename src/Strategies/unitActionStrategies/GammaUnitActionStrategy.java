@@ -22,6 +22,8 @@ public class GammaUnitActionStrategy  implements UnitActionStrategy {
         else if(game.getUnitAt(p).getTypeString() == "archer"){
             if(unitMap.get(p).isFortified()){
                 unitMap.get(p).setFortified(false);
+                unitMap.get(p).setDefensiveStrength(-unitMap.get(p).getDefensiveStrength()/2);
+
             } else {
                 unitMap.get(p).setDefensiveStrength(unitMap.get(p).getDefensiveStrength());
                 unitMap.get(p).setFortified(true);

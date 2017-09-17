@@ -543,9 +543,9 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldDoubleArcherDefenceStrengthWhenFortify(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
         gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
     }
     @Test
     public void shouldOnlyBeAbleToMove1Field(){
@@ -569,17 +569,17 @@ public class TestAlphaCiv {
     }
     @Test
     public void shouldNotBeAbleToMoveFortifiedArcher(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
         gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
         gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
         assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
     }
     @Test
     public void shouldBeAbleToMoveArcherWhenFortifyIsRevoked(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
         gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
         gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
         assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
         gammaGame.performUnitActionAt(new Position(2,0));
@@ -587,8 +587,15 @@ public class TestAlphaCiv {
         gammaGame.endOfTurn();
         gammaGame.moveUnit(new Position(2,0), new Position(2,1));
         assertThat(gammaGame.getUnitAt(new Position(2,1)).getTypeString(), is("archer"));
-
     }
-
-
+    @Test
+    public void shouldReduceDefensiveStrengthWhenForifyIsRevoked(){
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
+        gammaGame.performUnitActionAt(new Position(2,0));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
+        gammaGame.endOfTurn();
+        gammaGame.endOfTurn();
+        gammaGame.performUnitActionAt(new Position(2,0));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
+    }
 }

@@ -24,7 +24,7 @@ public class UnitImpl implements Unit {
         this.position = p;
         this.type = t;
         this.player = pl;
-        defensiveStrength = 2;
+        defensiveStrength = 3;
         if(type == "archer" || type == GameConstants.LEGION || type == "settler" ) {
             this.moves = 1;
         }
@@ -69,9 +69,8 @@ public class UnitImpl implements Unit {
         this.position = position;
     }
 
-    public int setDefensiveStrength(int amount){
+    public void setDefensiveStrength(int amount){
         defensiveStrength += amount;
-        return defensiveStrength;
     }
     public void setMoves(int amount){
         moves = amount;
