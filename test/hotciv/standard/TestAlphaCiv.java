@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WinningStrategies.BetaWinningStrategy;
+import Strategies.unitActionStrategies.GammaUnitActionStrategy;
 import hotciv.framework.*;
 
 import Strategies.AgingStrategies.AlphaAgingStrategy;
@@ -46,6 +47,7 @@ public class TestAlphaCiv {
     private Game betaGame;
     private City betaRCity;
     private City betaBCity;
+    private GameImpl gammaGame;
 
     /**
      * Fixture for alphaciv testing.
@@ -53,8 +55,9 @@ public class TestAlphaCiv {
     @Before
     public void setUp() {
 
-        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy());
-        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy());
+        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(),null);
+        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy(), null);
+        gammaGame = new GameImpl(new AlphaAgingStrategy(),  new AlphaWinningStrategy(), new GammaUnitActionStrategy() );
         rCity = alphaGame.getCityAt(new Position(1,1));
         bCity = alphaGame.getCityAt(new Position(4,1));
         betaRCity = betaGame.getCityAt(new Position(1,1));
@@ -495,6 +498,12 @@ public class TestAlphaCiv {
         betaGame.moveUnit(new Position(3, 2), new Position(1, 1));
         assertThat(betaRCity.getOwner(), is(Player.BLUE));
         assertThat(betaGame.getWinner(), is (Player.BLUE));
+    }
+    @Test
+    public void redSettlerActionShouldMakeCity(){
+        gammaGame.performUnitActionAt(new Position(4,3));
+        assertThat(gammaGame.getUnitAt(new Position(4,3)), is(nullValue()));
+        assertThat(gammaGame.getCityAt(new Position(4,3)).getOwner(), is(Player.RED));
     }
 
 }

@@ -1,6 +1,8 @@
 package hotciv.standard;
 
 import Strategies.WinningStrategies.WinningStrategy;
+import Strategies.unitActionStrategies.GammaUnitActionStrategy;
+import Strategies.unitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
 import Strategies.AgingStrategies.AgingStrategy;
 
@@ -37,6 +39,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
     private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
@@ -54,7 +57,7 @@ public class GameImpl implements Game {
     private int playerturn = 1;
     private int year = -4000;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy){
+    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy){
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
                 Position pos = new Position(i,j);
@@ -63,6 +66,7 @@ public class GameImpl implements Game {
         }
         this.winningStrategy = winningStrategy;
         this.agingStrategy = agingStrategy;
+        this.unitActionStrategy = unitActionStrategy;
         tileMap.put(ocean.getPosition(), ocean);
         tileMap.put(mountain.getPosition(), mountain);
         tileMap.put(hills.getPosition(), hills);
@@ -174,7 +178,9 @@ public class GameImpl implements Game {
         city.setProduction(unitType);
     }
 
-    public void performUnitActionAt( Position p ) {}
+    public void performUnitActionAt( Position p ) {
+        unitActionStrategy.performUnitActionAt(p, this, unitMap, cityMap  );
+    }
 
     public Position positionForNewUnit (Position p){
         for (Position pos: spawnArray) {
