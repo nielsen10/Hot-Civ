@@ -15,12 +15,14 @@ public class UnitImpl implements Unit {
     private String type;
     private Player player;
     private int defensiveStrenght;
+    private int moves;
 
-    public UnitImpl(Position p, String t, Player pl){
+    public UnitImpl(Position p, String t, Player pl, int moves){
         this.position = p;
         this.type = t;
         this.player = pl;
         defensiveStrenght = 2;
+        this.moves = moves;
     }
 
 
@@ -37,7 +39,7 @@ public class UnitImpl implements Unit {
 
     @Override
     public int getMoveCount() {
-        return 0;
+        return moves;
     }
 
     @Override
@@ -59,5 +61,8 @@ public class UnitImpl implements Unit {
     public int setDefensiveStrength(int amount){
         defensiveStrenght += amount;
         return defensiveStrenght;
+    }
+    public int setMoves(){
+        return 1;
     }
 }

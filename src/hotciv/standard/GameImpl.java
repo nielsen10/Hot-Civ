@@ -1,10 +1,9 @@
 package hotciv.standard;
 
+import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
-import Strategies.unitActionStrategies.GammaUnitActionStrategy;
 import Strategies.unitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
-import Strategies.AgingStrategies.AgingStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,9 +46,9 @@ public class GameImpl implements Game {
     private TileImpl ocean = new TileImpl(new Position(1,0), GameConstants.OCEANS);
     private TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
     private TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
-    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
-    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
-    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
+    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED, 1);
+    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE, 1);
+    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED, 1);
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
@@ -118,26 +117,28 @@ public class GameImpl implements Game {
     public int getAge() { return year; }
 
     public boolean moveUnit( Position from, Position to ) {
-        try {
-            if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
-                return false;
-            }
-        } catch (NullPointerException e){}
-        try{
-            if(tileMap.get(to).equals(ocean) || tileMap.get(to).equals(mountain)){
-                return false;
-            }
-        } catch (NullPointerException e) {}
-        try {
+        if (getUnitAt(from) == null) {
+            return false;
+        }
+        if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
+            return false;
+        }
+        if (tileMap.get(to).equals(ocean) || tileMap.get(to).equals(mountain)) {
+            return false;
+        }
+        if(cityMap.get(to) != null) {
             if (cityMap.get(to).getOwner() != getPlayerInTurn()) {
                 cityMap.get(to).setPlayer(getPlayerInTurn());
             }
-        }catch (NullPointerException e) {}
-        UnitImpl unit = unitMap.get(from);
-        unitMap.remove(from, unit);
-        unit.setPosition(to);
-        unitMap.put(unit.getPosition(), unit);
-
+        }
+        int columnDiff = from.getColumn() - to.getColumn();
+        int rowDiff = from.getRow() - to.getRow();
+        if(columnDiff < 2 && columnDiff > -2 && rowDiff < 2 && rowDiff > -2) {
+            UnitImpl unit = unitMap.get(from);
+            unitMap.remove(from, unit);
+            unit.setPosition(to);
+            unitMap.put(unit.getPosition(), unit);
+        }
         return true;
     }
 
@@ -152,7 +153,7 @@ public class GameImpl implements Game {
             else if(cityRed.getProduction() == "archer") { cost = 10; }
             else if(cityRed.getProduction() == "settler") { cost = 30;}
             if(cityRed.getTreasury() >= cost) {
-                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
+                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED, 1);
                 cityRed.addTreasury(-cost);
                 unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
@@ -161,7 +162,7 @@ public class GameImpl implements Game {
             else if(cityBlue.getProduction() == "archer") { cost = 10; }
             else if(cityBlue.getProduction() == "settler") { cost = 30; }
             if (cityBlue.getTreasury() >= cost) {
-                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
+                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE,1);
                 cityBlue.addTreasury(-cost);
                 unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
             }
