@@ -1,6 +1,7 @@
 package Strategies.unitActionStrategies;
 
 import hotciv.framework.Position;
+import hotciv.framework.Unit;
 import hotciv.standard.CityImpl;
 import hotciv.standard.GameImpl;
 import hotciv.standard.UnitImpl;
@@ -19,7 +20,12 @@ public class GammaUnitActionStrategy  implements UnitActionStrategy {
             unitMap.remove(p, game.getUnitAt(p));
         }
         else if(game.getUnitAt(p).getTypeString() == "archer"){
-            unitMap.get(p).setDefensiveStrength(unitMap.get(p).getDefensiveStrength());
+            if(unitMap.get(p).isFortified()){
+                unitMap.get(p).setFortified(false);
+            } else {
+                unitMap.get(p).setDefensiveStrength(unitMap.get(p).getDefensiveStrength());
+                unitMap.get(p).setFortified(true);
+            }
         }
     }
 }

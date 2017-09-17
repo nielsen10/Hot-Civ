@@ -17,15 +17,18 @@ public class UnitImpl implements Unit {
     private Player player;
     private int defensiveStrength;
     private int moves;
+    private boolean fortified;
+
 
     public UnitImpl(Position p, String t, Player pl){
         this.position = p;
         this.type = t;
         this.player = pl;
         defensiveStrength = 2;
-        if(type == "archer" || type == GameConstants.LEGION || type == "settler" ){
+        if(type == "archer" || type == GameConstants.LEGION || type == "settler" ) {
             this.moves = 1;
         }
+        fortified = false;
     }
 
 
@@ -42,6 +45,9 @@ public class UnitImpl implements Unit {
 
     @Override
     public int getMoveCount() {
+        if(fortified){
+            return 0;
+        }
         return moves;
     }
 
@@ -58,9 +64,11 @@ public class UnitImpl implements Unit {
     public Position getPosition() {
         return position;
     }
+
     public void setPosition(Position position) {
         this.position = position;
     }
+
     public int setDefensiveStrength(int amount){
         defensiveStrength += amount;
         return defensiveStrength;
@@ -68,4 +76,12 @@ public class UnitImpl implements Unit {
     public void setMoves(int amount){
         moves = amount;
     }
+    public void setFortified(boolean fortified) {
+        this.fortified = fortified;
+    }
+
+    public boolean isFortified() {
+        return fortified;
+    }
+
 }

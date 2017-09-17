@@ -566,20 +566,29 @@ public class TestAlphaCiv {
         gammaGame.endOfTurn();
         gammaGame.moveUnit(new Position(2,1),new Position(3,1));
         assertThat(gammaGame.getUnitAt(new Position(3, 1)).getTypeString(), is("archer"));
-
-
     }
-
-
-    /*@Test
+    @Test
     public void shouldNotBeAbleToMoveFortifiedArcher(){
         assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
         gammaGame.performUnitActionAt(new Position(2,0));
         assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
         gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
         assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
-    }*/
+    }
+    @Test
+    public void shouldBeAbleToMoveArcherWhenFortifyIsRevoked(){
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(2));
+        gammaGame.performUnitActionAt(new Position(2,0));
+        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(4));
+        gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
+        assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
+        gammaGame.performUnitActionAt(new Position(2,0));
+        gammaGame.endOfTurn();
+        gammaGame.endOfTurn();
+        gammaGame.moveUnit(new Position(2,0), new Position(2,1));
+        assertThat(gammaGame.getUnitAt(new Position(2,1)).getTypeString(), is("archer"));
 
+    }
 
 
 }
