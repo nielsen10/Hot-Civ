@@ -7,6 +7,7 @@ import hotciv.framework.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /** Skeleton implementation of HotCiv.
 
@@ -46,9 +47,9 @@ public class GameImpl implements Game {
     private TileImpl ocean = new TileImpl(new Position(1,0), GameConstants.OCEANS);
     private TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
     private TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
-    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED, 1);
-    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE, 1);
-    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED, 1);
+    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
+    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
+    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
@@ -117,9 +118,8 @@ public class GameImpl implements Game {
     public int getAge() { return year; }
 
     public boolean moveUnit( Position from, Position to ) {
-        if (getUnitAt(from) == null) {
-            return false;
-        }
+        if(getUnitAt(from) == null) { return false; }
+        if(getUnitAt(from).getMoveCount() == 0) { return false; }
         if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
             return false;
         }
@@ -135,9 +135,11 @@ public class GameImpl implements Game {
         int rowDiff = from.getRow() - to.getRow();
         if(columnDiff < 2 && columnDiff > -2 && rowDiff < 2 && rowDiff > -2) {
             UnitImpl unit = unitMap.get(from);
+            unit.setMoves(unit.getMoveCount()-1);
             unitMap.remove(from, unit);
             unit.setPosition(to);
             unitMap.put(unit.getPosition(), unit);
+
         }
         return true;
     }
@@ -153,7 +155,7 @@ public class GameImpl implements Game {
             else if(cityRed.getProduction() == "archer") { cost = 10; }
             else if(cityRed.getProduction() == "settler") { cost = 30;}
             if(cityRed.getTreasury() >= cost) {
-                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED, 1);
+                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
                 cityRed.addTreasury(-cost);
                 unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
@@ -162,9 +164,12 @@ public class GameImpl implements Game {
             else if(cityBlue.getProduction() == "archer") { cost = 10; }
             else if(cityBlue.getProduction() == "settler") { cost = 30; }
             if (cityBlue.getTreasury() >= cost) {
-                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE,1);
+                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
                 cityBlue.addTreasury(-cost);
                 unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
+            }
+            for (Position unit : unitMap.keySet()) {
+                unitMap.get(unit).setMoves(1);
             }
             getWinner();
         }

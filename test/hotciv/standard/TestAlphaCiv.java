@@ -235,6 +235,8 @@ public class TestAlphaCiv {
         alphaGame.moveUnit(new Position(3, 1), new Position(3, 2));
         assertThat(alphaGame.getUnitAt(new Position(3, 2)).getTypeString(), is("archer"));
         assertThat(alphaGame.getUnitAt(new Position(3, 2)).getTypeString(), not("legion"));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
         alphaGame.moveUnit(new Position(3, 2), new Position(3, 3));
         assertThat(alphaGame.getUnitAt(new Position(3, 2)), nullValue());
         assertThat(alphaGame.getUnitAt(new Position(3, 3)).getTypeString(), is("archer"));
@@ -553,6 +555,21 @@ public class TestAlphaCiv {
         gammaGame.moveUnit(new Position(2,1),new Position(2,8));
         assertThat(gammaGame.getUnitAt(new Position(2, 8)), is(nullValue()));
     }
+    @Test
+    public void shouldOnlyBeAbleToMove1TimePrRound(){
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getTypeString(), is("archer"));
+        gammaGame.moveUnit(new Position(2,0),new Position(2,1));
+        assertThat(gammaGame.getUnitAt(new Position(2, 1)).getTypeString(), is("archer"));
+        gammaGame.moveUnit(new Position(2,1),new Position(3,1));
+        assertThat(gammaGame.getUnitAt(new Position(3, 1)), is(nullValue()));
+        gammaGame.endOfTurn();
+        gammaGame.endOfTurn();
+        gammaGame.moveUnit(new Position(2,1),new Position(3,1));
+        assertThat(gammaGame.getUnitAt(new Position(3, 1)).getTypeString(), is("archer"));
+
+
+    }
+
 
     /*@Test
     public void shouldNotBeAbleToMoveFortifiedArcher(){

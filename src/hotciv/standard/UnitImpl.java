@@ -1,5 +1,6 @@
 package hotciv.standard;
 
+import hotciv.framework.GameConstants;
 import hotciv.framework.Player;
 import hotciv.framework.Position;
 import hotciv.framework.Unit;
@@ -14,15 +15,17 @@ public class UnitImpl implements Unit {
     private Position position;
     private String type;
     private Player player;
-    private int defensiveStrenght;
+    private int defensiveStrength;
     private int moves;
 
-    public UnitImpl(Position p, String t, Player pl, int moves){
+    public UnitImpl(Position p, String t, Player pl){
         this.position = p;
         this.type = t;
         this.player = pl;
-        defensiveStrenght = 2;
-        this.moves = moves;
+        defensiveStrength = 2;
+        if(type == "archer" || type == GameConstants.LEGION || type == "settler" ){
+            this.moves = 1;
+        }
     }
 
 
@@ -44,7 +47,7 @@ public class UnitImpl implements Unit {
 
     @Override
     public int getDefensiveStrength() {
-        return defensiveStrenght;
+        return defensiveStrength;
     }
 
     @Override
@@ -59,10 +62,10 @@ public class UnitImpl implements Unit {
         this.position = position;
     }
     public int setDefensiveStrength(int amount){
-        defensiveStrenght += amount;
-        return defensiveStrenght;
+        defensiveStrength += amount;
+        return defensiveStrength;
     }
-    public int setMoves(){
-        return 1;
+    public void setMoves(int amount){
+        moves = amount;
     }
 }
