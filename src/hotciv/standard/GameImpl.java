@@ -45,11 +45,11 @@ public class GameImpl implements Game {
     private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
     private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
     private TileImpl ocean = new TileImpl(new Position(1,0), GameConstants.OCEANS);
-    private TileImpl mountain = new TileImpl(new Position(2,2), "mountain");
-    private TileImpl hills = new TileImpl(new Position(0,1 ), "hills");
-    private UnitImpl archer = new UnitImpl(new Position(2,0), "archer", Player.RED);
-    private UnitImpl legion = new UnitImpl(new Position(3,2), "legion", Player.BLUE);
-    private UnitImpl settler = new UnitImpl(new Position(4,3), "settler", Player.RED);
+    private TileImpl mountain = new TileImpl(new Position(2,2), GameConstants.MOUNTAINS);
+    private TileImpl hills = new TileImpl(new Position(0,1 ), GameConstants.HILLS);
+    private UnitImpl archer = new UnitImpl(new Position(2,0), GameConstants.ARCHER, Player.RED);
+    private UnitImpl legion = new UnitImpl(new Position(3,2), GameConstants.LEGION, Player.BLUE);
+    private UnitImpl settler = new UnitImpl(new Position(4,3), GameConstants.SETTLER, Player.RED);
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
@@ -61,7 +61,7 @@ public class GameImpl implements Game {
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
                 Position pos = new Position(i,j);
-                tileMap.put(pos, new TileImpl(pos, "plain"));
+                tileMap.put(pos, new TileImpl(pos, GameConstants.PLAINS));
             }
         }
         this.winningStrategy = winningStrategy;
@@ -151,18 +151,18 @@ public class GameImpl implements Game {
             cityRed.addTreasury(6);
             cityBlue.addTreasury(6);
             int cost = 0;
-            if(cityRed.getProduction() == "legion") { cost = 15; }
-            else if(cityRed.getProduction() == "archer") { cost = 10; }
-            else if(cityRed.getProduction() == "settler") { cost = 30;}
+            if(cityRed.getProduction() == GameConstants.LEGION) { cost = 15; }
+            else if(cityRed.getProduction() == GameConstants.ARCHER) { cost = 10; }
+            else if(cityRed.getProduction() == GameConstants.SETTLER) { cost = 30;}
             if(cityRed.getTreasury() >= cost) {
                 UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
                 cityRed.addTreasury(-cost);
                 unitMap.put(newRedUnit.getPosition(), newRedUnit);
             }
             cost = 0;
-            if(cityBlue.getProduction() == "legion") { cost = 15; }
-            else if(cityBlue.getProduction() == "archer") { cost = 10; }
-            else if(cityBlue.getProduction() == "settler") { cost = 30; }
+            if(cityBlue.getProduction() == GameConstants.LEGION) { cost = 15; }
+            else if(cityBlue.getProduction() == GameConstants.LEGION) { cost = 10; }
+            else if(cityBlue.getProduction() == GameConstants.SETTLER) { cost = 30; }
             if (cityBlue.getTreasury() >= cost) {
                 UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
                 cityBlue.addTreasury(-cost);

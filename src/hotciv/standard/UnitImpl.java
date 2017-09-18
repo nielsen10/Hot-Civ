@@ -25,7 +25,7 @@ public class UnitImpl implements Unit {
         this.type = t;
         this.player = pl;
         defensiveStrength = 3;
-        if(type == "archer" || type == GameConstants.LEGION || type == "settler" ) {
+        if(type == GameConstants.ARCHER|| type == GameConstants.LEGION || type == GameConstants.SETTLER ) {
             this.moves = 1;
         }
         fortified = false;
