@@ -2,6 +2,8 @@ package hotciv.standard;
 
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WinningStrategies.BetaWinningStrategy;
+import Strategies.WorldStrategy.AlphaWorldStrategy;
+import Strategies.WorldStrategy.DeltaWorldStrategy;
 import Strategies.unitActionStrategies.GammaUnitActionStrategy;
 import hotciv.framework.*;
 
@@ -47,9 +49,10 @@ public class TestAlphaCiv {
     private Game betaGame;
     private City betaRCity;
     private City betaBCity;
-    private GameImpl gammaGame;
+    private Game gammaGame;
     private City gammaRCity;
     private City gammaBCity;
+    private Game deltaGame;
 
     /**
      * Fixture for alphaciv testing.
@@ -57,9 +60,10 @@ public class TestAlphaCiv {
     @Before
     public void setUp() {
 
-        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(),null);
-        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy(), null);
-        gammaGame = new GameImpl(new AlphaAgingStrategy(),  new AlphaWinningStrategy(), new GammaUnitActionStrategy() );
+        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(),null, new AlphaWorldStrategy());
+        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy(), null, new AlphaWorldStrategy());
+        gammaGame = new GameImpl(new AlphaAgingStrategy(),  new AlphaWinningStrategy(), new GammaUnitActionStrategy(), new AlphaWorldStrategy());
+        deltaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null,  new DeltaWorldStrategy());
         rCity = alphaGame.getCityAt(new Position(1,1));
         bCity = alphaGame.getCityAt(new Position(4,1));
         betaRCity = betaGame.getCityAt(new Position(1,1));
@@ -597,5 +601,13 @@ public class TestAlphaCiv {
         gammaGame.endOfTurn();
         gammaGame.performUnitActionAt(new Position(2,0));
         assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
+    }
+    @Test
+    public void shouldBuildDeltaWorld(){
+        assertThat(deltaGame.getCityAt(new Position(8,12)).getOwner(), is(Player.RED));
+        assertThat(deltaGame.getCityAt(new Position(4,5)).getOwner(), is(Player.BLUE));
+
+        assertThat(deltaGame.getTileAt(new Position(0,0)).getTypeString(), is(GameConstants.OCEANS));
+        assertThat(deltaGame.getTileAt(new Position(3,4)).getTypeString(), is(GameConstants.MOUNTAINS));
     }
 }

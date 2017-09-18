@@ -2,12 +2,12 @@ package hotciv.standard;
 
 import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
+import Strategies.WorldStrategy.WorldStrategy;
 import Strategies.unitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /** Skeleton implementation of HotCiv.
 
@@ -36,20 +36,12 @@ import java.util.Map;
 
  */
 
-
 public class GameImpl implements Game {
 
+    private WorldStrategy worldStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
-    private CityImpl cityRed = new CityImpl(Player.RED, new Position(1,1));
-    private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,1));
-    private TileImpl ocean = new TileImpl(new Position(1,0), GameConstants.OCEANS);
-    private TileImpl mountain = new TileImpl(new Position(2,2), GameConstants.MOUNTAINS);
-    private TileImpl hills = new TileImpl(new Position(0,1 ), GameConstants.HILLS);
-    private UnitImpl archer = new UnitImpl(new Position(2,0), GameConstants.ARCHER, Player.RED);
-    private UnitImpl legion = new UnitImpl(new Position(3,2), GameConstants.LEGION, Player.BLUE);
-    private UnitImpl settler = new UnitImpl(new Position(4,3), GameConstants.SETTLER, Player.RED);
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
@@ -57,24 +49,19 @@ public class GameImpl implements Game {
     private int playerturn = 1;
     private int year = -4000;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy){
+    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy){
+        this.winningStrategy = winningStrategy;
+        this.agingStrategy = agingStrategy;
+        this.unitActionStrategy = unitActionStrategy;
+        this.worldStrategy = worldStrategy;
+
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
                 Position pos = new Position(i,j);
                 tileMap.put(pos, new TileImpl(pos, GameConstants.PLAINS));
             }
         }
-        this.winningStrategy = winningStrategy;
-        this.agingStrategy = agingStrategy;
-        this.unitActionStrategy = unitActionStrategy;
-        tileMap.put(ocean.getPosition(), ocean);
-        tileMap.put(mountain.getPosition(), mountain);
-        tileMap.put(hills.getPosition(), hills);
-        unitMap.put(archer.getPosition(), archer);
-        unitMap.put(legion.getPosition(), legion);
-        unitMap.put(settler.getPosition(), settler);
-        cityMap.put(cityRed.getPosition(), cityRed);
-        cityMap.put(cityBlue.getPosition(), cityBlue);
+        worldStrategy.buildWorld(this, unitMap, tileMap, cityMap);
 
         spawnArray.add(new Position(0,0));
         spawnArray.add(new Position(-1,0));
@@ -85,14 +72,9 @@ public class GameImpl implements Game {
         spawnArray.add(new Position(1,-1));
         spawnArray.add(new Position(0,-1));
         spawnArray.add(new Position(-1,-1));
-
-
     }
 
-
-    public Tile getTileAt( Position p ) {
-        return tileMap.get(p);
-    }
+    public Tile getTileAt( Position p ) { return tileMap.get(p); }
 
     public Unit getUnitAt( Position p ) {
         return unitMap.get(p);
@@ -123,7 +105,7 @@ public class GameImpl implements Game {
         if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
             return false;
         }
-        if (tileMap.get(to).equals(ocean) || tileMap.get(to).equals(mountain)) {
+        if (tileMap.get(to).equals(GameConstants.OCEANS) || tileMap.get(to).equals(GameConstants.MOUNTAINS)) {
             return false;
         }
         if(cityMap.get(to) != null) {
@@ -148,26 +130,21 @@ public class GameImpl implements Game {
         if(playerturn == 2){
             year += agingStrategy.endOfTurn(this);
             playerturn = 1;
-            cityRed.addTreasury(6);
-            cityBlue.addTreasury(6);
-            int cost = 0;
-            if(cityRed.getProduction() == GameConstants.LEGION) { cost = 15; }
-            else if(cityRed.getProduction() == GameConstants.ARCHER) { cost = 10; }
-            else if(cityRed.getProduction() == GameConstants.SETTLER) { cost = 30;}
-            if(cityRed.getTreasury() >= cost) {
-                UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(cityRed.getPosition()),cityRed.getProduction(), Player.RED);
-                cityRed.addTreasury(-cost);
-                unitMap.put(newRedUnit.getPosition(), newRedUnit);
+            for (Position cityImpl : cityMap.keySet()) {
+                int cost = 0;
+                CityImpl city = cityMap.get(cityImpl);
+                city.addTreasury(6);
+                if(city.getProduction() == GameConstants.LEGION) { cost = 15; }
+                else if(city.getProduction() == GameConstants.ARCHER) { cost = 10; }
+                else if(city.getProduction() == GameConstants.SETTLER) { cost = 30;}
+                if(city.getTreasury() >= cost) {
+                    UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(city.getPosition()),city.getProduction(), Player.RED);
+                    city.addTreasury(-cost);
+                    unitMap.put(newRedUnit.getPosition(), newRedUnit);
+                }
+
             }
-            cost = 0;
-            if(cityBlue.getProduction() == GameConstants.LEGION) { cost = 15; }
-            else if(cityBlue.getProduction() == GameConstants.LEGION) { cost = 10; }
-            else if(cityBlue.getProduction() == GameConstants.SETTLER) { cost = 30; }
-            if (cityBlue.getTreasury() >= cost) {
-                UnitImpl newBlueUnit = new UnitImpl(positionForNewUnit(cityBlue.getPosition()),cityBlue.getProduction(), Player.BLUE);
-                cityBlue.addTreasury(-cost);
-                unitMap.put(newBlueUnit.getPosition(), newBlueUnit);
-            }
+
             for (Position unit : unitMap.keySet()) {
                 unitMap.get(unit).setMoves(1);
             }
@@ -176,7 +153,6 @@ public class GameImpl implements Game {
         else{
             playerturn ++;
         }
-
     }
 
     public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
