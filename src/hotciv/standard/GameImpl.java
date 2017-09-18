@@ -128,7 +128,7 @@ public class GameImpl implements Game {
 
     public void endOfTurn() {
         if(playerturn == 2){
-            year += agingStrategy.endOfTurn(this);
+            year = agingStrategy.endOfTurn();
             playerturn = 1;
             for (Position cityImpl : cityMap.keySet()) {
                 int cost = 0;

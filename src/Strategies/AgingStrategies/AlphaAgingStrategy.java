@@ -1,13 +1,14 @@
 package Strategies.AgingStrategies;
 
-import hotciv.standard.GameImpl;
-
 /**
  * Created by csdev on 9/17/17.
  */
 public class AlphaAgingStrategy implements AgingStrategy {
+    private int year = -4000;
+
     @Override
-    public int endOfTurn(GameImpl year) {
-        return 100;
+    public int endOfTurn() {
+        year += 100;
+        return year;
     }
 }
