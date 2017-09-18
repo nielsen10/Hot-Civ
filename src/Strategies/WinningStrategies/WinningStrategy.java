@@ -8,5 +8,5 @@ import hotciv.standard.GameImpl;
  */
 public interface WinningStrategy {
 
-    public Player getWinner(GameImpl game);
+    public Player calculateWinner(GameImpl game);
 }

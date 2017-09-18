@@ -1,14 +1,10 @@
 package hotciv.standard;
 
 import Strategies.WinningStrategies.AlphaWinningStrategy;
-import Strategies.WinningStrategies.BetaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
-import Strategies.WorldStrategy.DeltaWorldStrategy;
-import Strategies.unitActionStrategies.GammaUnitActionStrategy;
 import hotciv.framework.*;
 
 import Strategies.AgingStrategies.AlphaAgingStrategy;
-import Strategies.AgingStrategies.BetaAgingStrategy;
 import org.junit.*;
 
 import static org.junit.Assert.*;

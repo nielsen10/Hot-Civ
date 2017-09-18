@@ -3,7 +3,7 @@ package hotciv.standard;
 import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.WorldStrategy;
-import Strategies.unitActionStrategies.UnitActionStrategy;
+import Strategies.UnitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
 
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class GameImpl implements Game {
     }
 
     public Player getWinner() {
-        return winningStrategy.getWinner(this);
+        return winningStrategy.calculateWinner(this);
     }
 
     public int getAge() { return year; }
@@ -102,9 +102,8 @@ public class GameImpl implements Game {
     public boolean moveUnit( Position from, Position to ) {
         if(getUnitAt(from) == null) { return false; }
         if(getUnitAt(from).getMoveCount() == 0) { return false; }
-        if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
-            return false;
-        }
+        if(getUnitAt(from).getOwner() != getPlayerInTurn()) { return false; }
+
         if (tileMap.get(to).equals(GameConstants.OCEANS) || tileMap.get(to).equals(GameConstants.MOUNTAINS)) {
             return false;
         }
@@ -128,7 +127,7 @@ public class GameImpl implements Game {
 
     public void endOfTurn() {
         if(playerturn == 2){
-            year = agingStrategy.endOfTurn();
+            year = agingStrategy.calculateYear();
             playerturn = 1;
             for (Position cityImpl : cityMap.keySet()) {
                 int cost = 0;
@@ -163,7 +162,7 @@ public class GameImpl implements Game {
     }
 
     public void performUnitActionAt( Position p ) {
-        unitActionStrategy.performUnitActionAt(p, this, unitMap, cityMap);
+        unitActionStrategy.deployUnitAction(p, this, unitMap, cityMap);
     }
 
     public Position positionForNewUnit (Position p){

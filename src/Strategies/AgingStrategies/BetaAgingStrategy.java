@@ -7,7 +7,7 @@ public class BetaAgingStrategy implements AgingStrategy {
     private int year = -4000;
 
     @Override
-    public int endOfTurn() {
+    public int calculateYear() {
         if (year < -100) {
             year += 100;
         } else if (year == -100) {

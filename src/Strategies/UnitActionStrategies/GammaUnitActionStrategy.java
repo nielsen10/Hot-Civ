@@ -1,8 +1,7 @@
-package Strategies.unitActionStrategies;
+package Strategies.UnitActionStrategies;
 
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
-import hotciv.framework.Unit;
 import hotciv.standard.CityImpl;
 import hotciv.standard.GameImpl;
 import hotciv.standard.UnitImpl;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 public class GammaUnitActionStrategy implements UnitActionStrategy {
 
     @Override
-    public void performUnitActionAt(Position p, GameImpl game, HashMap<Position, UnitImpl> unitMap, HashMap<Position, CityImpl> cityMap) {
+    public void deployUnitAction(Position p, GameImpl game, HashMap<Position, UnitImpl> unitMap, HashMap<Position, CityImpl> cityMap) {
         if (game.getUnitAt(p).getTypeString() == GameConstants.SETTLER) {
             cityMap.put(p, new CityImpl(game.getUnitAt(p).getOwner(), p));
             unitMap.remove(p, game.getUnitAt(p));

@@ -3,7 +3,7 @@ package hotciv.standard;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
-import Strategies.unitActionStrategies.GammaUnitActionStrategy;
+import Strategies.UnitActionStrategies.GammaUnitActionStrategy;
 import hotciv.framework.*;
 import org.junit.Before;
 import org.junit.Test;

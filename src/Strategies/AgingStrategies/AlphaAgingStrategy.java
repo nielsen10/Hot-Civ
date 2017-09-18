@@ -7,7 +7,7 @@ public class AlphaAgingStrategy implements AgingStrategy {
     private int year = -4000;
 
     @Override
-    public int endOfTurn() {
+    public int calculateYear() {
         year += 100;
         return year;
     }

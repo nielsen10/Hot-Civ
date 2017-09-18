@@ -7,5 +7,5 @@ import hotciv.standard.GameImpl;
  */
 public interface AgingStrategy {
 
-    public int endOfTurn();
+    public int calculateYear();
 }
