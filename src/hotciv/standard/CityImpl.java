@@ -14,11 +14,10 @@ public class CityImpl implements City {
     private int treasury;
     private String production;
 
-    public CityImpl(Player color, Position p ) {
+    public CityImpl(Player color, Position p) {
 
         player = color;
         position = p;
-
 
 
     }
@@ -47,13 +46,14 @@ public class CityImpl implements City {
         return null;
     }
 
-    public Position getPosition(){
+    public Position getPosition() {
         return position;
     }
 
-    public void setPlayer(Player p){
+    public void setPlayer(Player p) {
         player = p;
     }
+
     public int getTreasury() {
         return treasury;
     }

@@ -11,7 +11,6 @@ import hotciv.framework.Unit;
 public class UnitImpl implements Unit {
 
 
-
     private Position position;
     private String type;
     private Player player;
@@ -20,17 +19,16 @@ public class UnitImpl implements Unit {
     private boolean fortified;
 
 
-    public UnitImpl(Position p, String t, Player pl){
+    public UnitImpl(Position p, String t, Player pl) {
         this.position = p;
         this.type = t;
         this.player = pl;
         defensiveStrength = 3;
-        if(type == GameConstants.ARCHER|| type == GameConstants.LEGION || type == GameConstants.SETTLER ) {
+        if (type == GameConstants.ARCHER || type == GameConstants.LEGION || type == GameConstants.SETTLER) {
             this.moves = 1;
         }
         fortified = false;
     }
-
 
 
     @Override
@@ -45,7 +43,7 @@ public class UnitImpl implements Unit {
 
     @Override
     public int getMoveCount() {
-        if(fortified){
+        if (fortified) {
             return 0;
         }
         return moves;
@@ -69,12 +67,14 @@ public class UnitImpl implements Unit {
         this.position = position;
     }
 
-    public void setDefensiveStrength(int amount){
+    public void setDefensiveStrength(int amount) {
         defensiveStrength += amount;
     }
-    public void setMoves(int amount){
+
+    public void setMoves(int amount) {
         moves = amount;
     }
+
     public void setFortified(boolean fortified) {
         this.fortified = fortified;
     }

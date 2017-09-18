@@ -17,12 +17,14 @@ import java.util.Map;
 public class DeltaWorldStrategy implements WorldStrategy {
 
     private String line;
-    private CityImpl cityRed = new CityImpl(Player.RED, new Position(8,12));
-    private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4,5));
+    private CityImpl cityRed = new CityImpl(Player.RED, new Position(8, 12));
+    private CityImpl cityBlue = new CityImpl(Player.BLUE, new Position(4, 5));
 
-
+    // Basically we use a 'data driven' approach - code the
+    // layout in a simple semi-visual representation, and
+    // convert it to the actual Game representation.
     String[] layout =
-            new String[] {
+            new String[]{
                     "...ooMooooo.....",
                     "..ohhoooofffoo..",
                     ".oooooMooo...oo.",
@@ -42,21 +44,30 @@ public class DeltaWorldStrategy implements WorldStrategy {
             };
 
 
-
     @Override
     public void buildWorld(GameImpl game, HashMap<Position, UnitImpl> unitMap, HashMap<Position, TileImpl> tileMap, HashMap<Position, CityImpl> cityMap) {
         //input tiles
-        for (int r = 0; r < GameConstants.WORLDSIZE; r++ ) {
+        for (int r = 0; r < GameConstants.WORLDSIZE; r++) {
             line = layout[r];
-            for ( int c = 0; c < GameConstants.WORLDSIZE; c++ ) {
+            for (int c = 0; c < GameConstants.WORLDSIZE; c++) {
                 char tileChar = line.charAt(c);
                 String type = "error";
-                if ( tileChar == '.' ) { type = GameConstants.OCEANS; }
-                if ( tileChar == 'o' ) { type = GameConstants.PLAINS; }
-                if ( tileChar == 'M' ) { type = GameConstants.MOUNTAINS; }
-                if ( tileChar == 'f' ) { type = GameConstants.FOREST; }
-                if ( tileChar == 'h' ) { type = GameConstants.HILLS; }
-                Position p = new Position(r,c);
+                if (tileChar == '.') {
+                    type = GameConstants.OCEANS;
+                }
+                if (tileChar == 'o') {
+                    type = GameConstants.PLAINS;
+                }
+                if (tileChar == 'M') {
+                    type = GameConstants.MOUNTAINS;
+                }
+                if (tileChar == 'f') {
+                    type = GameConstants.FOREST;
+                }
+                if (tileChar == 'h') {
+                    type = GameConstants.HILLS;
+                }
+                Position p = new Position(r, c);
                 tileMap.put(p, new TileImpl(p, type));
             }
         }

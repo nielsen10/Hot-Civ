@@ -60,16 +60,16 @@ public class TestAlphaCiv {
     @Before
     public void setUp() {
 
-        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(),null, new AlphaWorldStrategy());
+        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null, new AlphaWorldStrategy());
         betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy(), null, new AlphaWorldStrategy());
-        gammaGame = new GameImpl(new AlphaAgingStrategy(),  new AlphaWinningStrategy(), new GammaUnitActionStrategy(), new AlphaWorldStrategy());
-        deltaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null,  new DeltaWorldStrategy());
-        rCity = alphaGame.getCityAt(new Position(1,1));
-        bCity = alphaGame.getCityAt(new Position(4,1));
-        betaRCity = betaGame.getCityAt(new Position(1,1));
-        betaBCity = betaGame.getCityAt(new Position(4,1));
-        gammaRCity = betaGame.getCityAt(new Position(1,1));
-        gammaBCity = betaGame.getCityAt(new Position(4,1));
+        gammaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), new GammaUnitActionStrategy(), new AlphaWorldStrategy());
+        deltaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null, new DeltaWorldStrategy());
+        rCity = alphaGame.getCityAt(new Position(1, 1));
+        bCity = alphaGame.getCityAt(new Position(4, 1));
+        betaRCity = betaGame.getCityAt(new Position(1, 1));
+        betaBCity = betaGame.getCityAt(new Position(4, 1));
+        gammaRCity = betaGame.getCityAt(new Position(1, 1));
+        gammaBCity = betaGame.getCityAt(new Position(4, 1));
     }
 
     // FRS p. 455 states that 'Red is the first player to take a turn'.
@@ -176,8 +176,8 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldBeRedSettler() {
-        assertThat(alphaGame.getUnitAt(new Position(4,3)).getTypeString(), is(GameConstants.SETTLER));
-        assertThat(alphaGame.getUnitAt(new Position(4,3)).getOwner(), is(Player.RED));
+        assertThat(alphaGame.getUnitAt(new Position(4, 3)).getTypeString(), is(GameConstants.SETTLER));
+        assertThat(alphaGame.getUnitAt(new Position(4, 3)).getOwner(), is(Player.RED));
     }
 
     @Test
@@ -291,133 +291,136 @@ public class TestAlphaCiv {
         assertThat(alphaGame.getTileAt(new Position(15, 15)).getTypeString(), is(GameConstants.PLAINS));
         assertThat(alphaGame.getTileAt(new Position(15, 0)).getTypeString(), is(GameConstants.PLAINS));
     }
+
     @Test
     public void redCityShouldProduce6Food() {
-        assertThat(rCity.getTreasury(), is (0));
+        assertThat(rCity.getTreasury(), is(0));
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(rCity.getTreasury(), is (6));
+        assertThat(rCity.getTreasury(), is(6));
 
     }
+
     @Test
     public void blueCityShouldProduce6Food() {
-        assertThat(bCity.getTreasury(), is (0));
+        assertThat(bCity.getTreasury(), is(0));
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(bCity.getTreasury(), is (6));
+        assertThat(bCity.getTreasury(), is(6));
     }
+
     @Test
     public void redCityShouldHave12FoodAfter2Rounds() {
-        assertThat(rCity.getTreasury(), is (0));
+        assertThat(rCity.getTreasury(), is(0));
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(rCity.getTreasury(), is (12));
+        assertThat(rCity.getTreasury(), is(12));
     }
 
     @Test
-    public void shouldProduce1ArcherForRed(){
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.ARCHER);
+    public void shouldProduce1ArcherForRed() {
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.ARCHER);
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(alphaGame.getUnitAt(new Position(1,1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)).getTypeString(), is(GameConstants.ARCHER));
     }
 
     @Test
-    public void shouldLoose10FoodWhenRedArcherIsProduced(){
-        assertThat(rCity.getTreasury(), is (0));
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.ARCHER);
+    public void shouldLoose10FoodWhenRedArcherIsProduced() {
+        assertThat(rCity.getTreasury(), is(0));
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.ARCHER);
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(alphaGame.getUnitAt(new Position(1,1)).getTypeString(), is(GameConstants.ARCHER));
-        assertThat(rCity.getTreasury(), is (2));
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(rCity.getTreasury(), is(2));
     }
 
     @Test
-    public void shouldProduceBlueArcherAfter10Production(){
-        alphaGame.changeProductionInCityAt(bCity.getPosition(),GameConstants.ARCHER);
+    public void shouldProduceBlueArcherAfter10Production() {
+        alphaGame.changeProductionInCityAt(bCity.getPosition(), GameConstants.ARCHER);
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(alphaGame.getUnitAt(new Position(4,1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(alphaGame.getUnitAt(new Position(4, 1)).getTypeString(), is(GameConstants.ARCHER));
     }
 
     @Test
-    public void shouldBeAbleToChangeTroopProductionToArcher(){
+    public void shouldBeAbleToChangeTroopProductionToArcher() {
         assertThat(rCity.getProduction(), nullValue());
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.ARCHER);
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.ARCHER);
         assertThat(rCity.getProduction(), is(GameConstants.ARCHER));
     }
 
     @Test
-    public void shouldBeAbleToChangeTroopProductionToLegion(){
+    public void shouldBeAbleToChangeTroopProductionToLegion() {
         assertThat(rCity.getProduction(), nullValue());
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.LEGION);
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.LEGION);
         assertThat(rCity.getProduction(), is(GameConstants.LEGION));
     }
 
     @Test
-    public void shouldProduce1LegionForRed(){
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.LEGION);
-        assertThat(alphaGame.getUnitAt(new Position(1,1)), nullValue());
+    public void shouldProduce1LegionForRed() {
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.LEGION);
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)), nullValue());
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(alphaGame.getUnitAt(new Position(1,1)).getTypeString(), is(GameConstants.LEGION));
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)).getTypeString(), is(GameConstants.LEGION));
     }
 
     @Test
-    public void shouldProduce1LegionForBlue(){
-        alphaGame.changeProductionInCityAt(bCity.getPosition(),GameConstants.LEGION);
-        assertThat(alphaGame.getUnitAt(new Position(4,1)), nullValue());
+    public void shouldProduce1LegionForBlue() {
+        alphaGame.changeProductionInCityAt(bCity.getPosition(), GameConstants.LEGION);
+        assertThat(alphaGame.getUnitAt(new Position(4, 1)), nullValue());
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
         alphaGame.endOfTurn();
-        assertThat(alphaGame.getUnitAt(new Position(4,1)).getTypeString(), is(GameConstants.LEGION));
+        assertThat(alphaGame.getUnitAt(new Position(4, 1)).getTypeString(), is(GameConstants.LEGION));
     }
 
     @Test
-    public void shouldProduce2ArcherForRed(){
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.ARCHER);
-        assertThat(alphaGame.getUnitAt(new Position(1,1)), nullValue());
-        assertThat(alphaGame.getUnitAt(new Position(0,1)), nullValue());
-        assertThat(rCity.getTreasury(), is (0));
+    public void shouldProduce2ArcherForRed() {
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.ARCHER);
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)), nullValue());
+        assertThat(alphaGame.getUnitAt(new Position(0, 1)), nullValue());
+        assertThat(rCity.getTreasury(), is(0));
         for (int i = 0; i < 8; i++) {
             alphaGame.endOfTurn();
         }
-        assertThat(alphaGame.getUnitAt(new Position(1,1)).getTypeString(), is(GameConstants.ARCHER));
-        assertThat(alphaGame.getUnitAt(new Position(0,1)).getTypeString(), is(GameConstants.ARCHER));
-        assertThat(rCity.getTreasury(), is (4)); //6 Production pr round, for four rounds 6*4=24 -2*10 = 4
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(alphaGame.getUnitAt(new Position(0, 1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(rCity.getTreasury(), is(4)); //6 Production pr round, for four rounds 6*4=24 -2*10 = 4
     }
 
     @Test
-    public void shouldProduce9ArcherForRed(){
-        alphaGame.changeProductionInCityAt(rCity.getPosition(),GameConstants.ARCHER);
-        assertThat(alphaGame.getUnitAt(new Position(1,1)), nullValue());
-        assertThat(alphaGame.getUnitAt(new Position(0,0)), nullValue());
-        assertThat(rCity.getTreasury(), is (0));
+    public void shouldProduce9ArcherForRed() {
+        alphaGame.changeProductionInCityAt(rCity.getPosition(), GameConstants.ARCHER);
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)), nullValue());
+        assertThat(alphaGame.getUnitAt(new Position(0, 0)), nullValue());
+        assertThat(rCity.getTreasury(), is(0));
         for (int i = 0; i < 30; i++) {
             alphaGame.endOfTurn();
         }
-        assertThat(alphaGame.getUnitAt(new Position(1,1)).getTypeString(), is(GameConstants.ARCHER));
-        assertThat(alphaGame.getUnitAt(new Position(0,0)).getTypeString(), is(GameConstants.ARCHER));
-        assertThat(rCity.getTreasury(), is (0)); //6 Production pr round, for 15 rounds 6*15=90 -9*10 = 0
+        assertThat(alphaGame.getUnitAt(new Position(1, 1)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(alphaGame.getUnitAt(new Position(0, 0)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(rCity.getTreasury(), is(0)); //6 Production pr round, for 15 rounds 6*15=90 -9*10 = 0
     }
 
     @Test
-    public void shouldPass100years(){
+    public void shouldPass100years() {
         assertThat(betaGame.getAge(), is(-4000));
         betaGame.endOfTurn();
         betaGame.endOfTurn();
@@ -500,114 +503,130 @@ public class TestAlphaCiv {
         betaGame.endOfTurn();
         assertThat(betaGame.getAge(), is(1971));
     }
+
     @Test
-    public void redShouldWinGameIfBlueCityIsTaken(){
+    public void redShouldWinGameIfBlueCityIsTaken() {
         assertThat(betaBCity.getOwner(), is(Player.BLUE));
         betaGame.moveUnit(new Position(2, 0), new Position(4, 1));
         assertThat(betaBCity.getOwner(), is(Player.RED));
-        assertThat(betaGame.getWinner(), is (Player.RED));
+        assertThat(betaGame.getWinner(), is(Player.RED));
     }
+
     @Test
-    public void blueShouldWinGameIfRedCityIsTaken(){
+    public void blueShouldWinGameIfRedCityIsTaken() {
         betaGame.endOfTurn();
         assertThat(betaRCity.getOwner(), is(Player.RED));
         betaGame.moveUnit(new Position(3, 2), new Position(1, 1));
         assertThat(betaRCity.getOwner(), is(Player.BLUE));
-        assertThat(betaGame.getWinner(), is (Player.BLUE));
-    }
-    @Test
-    public void redSettlerActionShouldMakeCity(){
-        gammaGame.performUnitActionAt(new Position(4,3));
-        assertThat(gammaGame.getUnitAt(new Position(4,3)), is(nullValue()));
-        assertThat(gammaGame.getCityAt(new Position(4,3)).getOwner(), is(Player.RED));
-    }
-    @Test
-    public void blueCityCanProduceSettler(){
-        gammaGame.changeProductionInCityAt(gammaBCity.getPosition(), GameConstants.SETTLER);
-        assertThat(gammaGame.getUnitAt(new Position(4,1)), nullValue());
-        for(int i = 0; i <101; i ++ ){ gammaGame.endOfTurn();}
-        assertThat(gammaGame.getUnitAt(new Position(4,1)).getTypeString(), is(GameConstants.SETTLER));
-    }
-    @Test
-    public void blueCityCanProduceSettlerAndItCanMoveAndMakeNewCity(){
-        gammaGame.changeProductionInCityAt(bCity.getPosition(), GameConstants.SETTLER);
-        assertThat(gammaGame.getUnitAt(new Position(4,1)), nullValue());
-        for(int i = 0; i < 40; i++){gammaGame.endOfTurn();}
-        assertThat(gammaGame.getUnitAt(new Position(4,1)).getTypeString(), is(GameConstants.SETTLER));
-        gammaGame.moveUnit(new Position(4,1), new Position(4,2));
-        gammaGame.performUnitActionAt(new Position(4,2));
-    }
-    @Test
-    public void redSettlerActionShouldMakeCityAndPopulation1(){
-        gammaGame.performUnitActionAt(new Position(4,3));
-        assertThat(gammaGame.getUnitAt(new Position(4,3)), is(nullValue()));
-        assertThat(gammaGame.getCityAt(new Position(4,3)).getOwner(), is(Player.RED));
-        assertThat(gammaGame.getCityAt(new Position(4,3)).getSize(), is(1));
+        assertThat(betaGame.getWinner(), is(Player.BLUE));
     }
 
     @Test
-    public void shouldDoubleArcherDefenceStrengthWhenFortify(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
-        gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
+    public void redSettlerActionShouldMakeCity() {
+        gammaGame.performUnitActionAt(new Position(4, 3));
+        assertThat(gammaGame.getUnitAt(new Position(4, 3)), is(nullValue()));
+        assertThat(gammaGame.getCityAt(new Position(4, 3)).getOwner(), is(Player.RED));
     }
+
     @Test
-    public void shouldOnlyBeAbleToMove1Field(){
+    public void blueCityCanProduceSettler() {
+        gammaGame.changeProductionInCityAt(gammaBCity.getPosition(), GameConstants.SETTLER);
+        assertThat(gammaGame.getUnitAt(new Position(4, 1)), nullValue());
+        for (int i = 0; i < 101; i++) {
+            gammaGame.endOfTurn();
+        }
+        assertThat(gammaGame.getUnitAt(new Position(4, 1)).getTypeString(), is(GameConstants.SETTLER));
+    }
+
+    @Test
+    public void blueCityCanProduceSettlerAndItCanMoveAndMakeNewCity() {
+        gammaGame.changeProductionInCityAt(bCity.getPosition(), GameConstants.SETTLER);
+        assertThat(gammaGame.getUnitAt(new Position(4, 1)), nullValue());
+        for (int i = 0; i < 40; i++) {
+            gammaGame.endOfTurn();
+        }
+        assertThat(gammaGame.getUnitAt(new Position(4, 1)).getTypeString(), is(GameConstants.SETTLER));
+        gammaGame.moveUnit(new Position(4, 1), new Position(4, 2));
+        gammaGame.performUnitActionAt(new Position(4, 2));
+    }
+
+    @Test
+    public void redSettlerActionShouldMakeCityAndPopulation1() {
+        gammaGame.performUnitActionAt(new Position(4, 3));
+        assertThat(gammaGame.getUnitAt(new Position(4, 3)), is(nullValue()));
+        assertThat(gammaGame.getCityAt(new Position(4, 3)).getOwner(), is(Player.RED));
+        assertThat(gammaGame.getCityAt(new Position(4, 3)).getSize(), is(1));
+    }
+
+    @Test
+    public void shouldDoubleArcherDefenceStrengthWhenFortify() {
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(3));
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(6));
+    }
+
+    @Test
+    public void shouldOnlyBeAbleToMove1Field() {
         assertThat(gammaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
-        gammaGame.moveUnit(new Position(2,0),new Position(2,1));
+        gammaGame.moveUnit(new Position(2, 0), new Position(2, 1));
         assertThat(gammaGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.ARCHER));
-        gammaGame.moveUnit(new Position(2,1),new Position(2,8));
+        gammaGame.moveUnit(new Position(2, 1), new Position(2, 8));
         assertThat(gammaGame.getUnitAt(new Position(2, 8)), is(nullValue()));
     }
+
     @Test
-    public void shouldOnlyBeAbleToMove1TimePrRound(){
+    public void shouldOnlyBeAbleToMove1TimePrRound() {
         assertThat(gammaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
-        gammaGame.moveUnit(new Position(2,0),new Position(2,1));
+        gammaGame.moveUnit(new Position(2, 0), new Position(2, 1));
         assertThat(gammaGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.ARCHER));
-        gammaGame.moveUnit(new Position(2,1),new Position(3,1));
+        gammaGame.moveUnit(new Position(2, 1), new Position(3, 1));
         assertThat(gammaGame.getUnitAt(new Position(3, 1)), is(nullValue()));
         gammaGame.endOfTurn();
         gammaGame.endOfTurn();
-        gammaGame.moveUnit(new Position(2,1),new Position(3,1));
+        gammaGame.moveUnit(new Position(2, 1), new Position(3, 1));
         assertThat(gammaGame.getUnitAt(new Position(3, 1)).getTypeString(), is(GameConstants.ARCHER));
     }
-    @Test
-    public void shouldNotBeAbleToMoveFortifiedArcher(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
-        gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
-        gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
-        assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
-    }
-    @Test
-    public void shouldBeAbleToMoveArcherWhenFortifyIsRevoked(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
-        gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
-        gammaGame.moveUnit(new Position(2,0 ),new Position(2,1));
-        assertThat(gammaGame.getUnitAt(new Position(2,1)), is(nullValue()));
-        gammaGame.performUnitActionAt(new Position(2,0));
-        gammaGame.endOfTurn();
-        gammaGame.endOfTurn();
-        gammaGame.moveUnit(new Position(2,0), new Position(2,1));
-        assertThat(gammaGame.getUnitAt(new Position(2,1)).getTypeString(), is(GameConstants.ARCHER));
-    }
-    @Test
-    public void shouldReduceDefensiveStrengthWhenForifyIsRevoked(){
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
-        gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(6));
-        gammaGame.endOfTurn();
-        gammaGame.endOfTurn();
-        gammaGame.performUnitActionAt(new Position(2,0));
-        assertThat(gammaGame.getUnitAt(new Position(2,0)).getDefensiveStrength(), is(3));
-    }
-    @Test
-    public void shouldBuildDeltaWorld(){
-        assertThat(deltaGame.getCityAt(new Position(8,12)).getOwner(), is(Player.RED));
-        assertThat(deltaGame.getCityAt(new Position(4,5)).getOwner(), is(Player.BLUE));
 
-        assertThat(deltaGame.getTileAt(new Position(0,0)).getTypeString(), is(GameConstants.OCEANS));
-        assertThat(deltaGame.getTileAt(new Position(3,4)).getTypeString(), is(GameConstants.MOUNTAINS));
+    @Test
+    public void shouldNotBeAbleToMoveFortifiedArcher() {
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(3));
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(6));
+        gammaGame.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(gammaGame.getUnitAt(new Position(2, 1)), is(nullValue()));
+    }
+
+    @Test
+    public void shouldBeAbleToMoveArcherWhenFortifyIsRevoked() {
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(3));
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(6));
+        gammaGame.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(gammaGame.getUnitAt(new Position(2, 1)), is(nullValue()));
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        gammaGame.endOfTurn();
+        gammaGame.endOfTurn();
+        gammaGame.moveUnit(new Position(2, 0), new Position(2, 1));
+        assertThat(gammaGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.ARCHER));
+    }
+
+    @Test
+    public void shouldReduceDefensiveStrengthWhenForifyIsRevoked() {
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(3));
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(6));
+        gammaGame.endOfTurn();
+        gammaGame.endOfTurn();
+        gammaGame.performUnitActionAt(new Position(2, 0));
+        assertThat(gammaGame.getUnitAt(new Position(2, 0)).getDefensiveStrength(), is(3));
+    }
+
+    @Test
+    public void shouldBuildDeltaWorld() {
+        assertThat(deltaGame.getCityAt(new Position(8, 12)).getOwner(), is(Player.RED));
+        assertThat(deltaGame.getCityAt(new Position(4, 5)).getOwner(), is(Player.BLUE));
+
+        assertThat(deltaGame.getTileAt(new Position(0, 0)).getTypeString(), is(GameConstants.OCEANS));
+        assertThat(deltaGame.getTileAt(new Position(3, 4)).getTypeString(), is(GameConstants.MOUNTAINS));
     }
 }

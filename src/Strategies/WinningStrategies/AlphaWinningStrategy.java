@@ -9,7 +9,7 @@ import hotciv.standard.GameImpl;
 public class AlphaWinningStrategy implements WinningStrategy {
     @Override
     public Player getWinner(GameImpl game) {
-        if(game.getAge() >=-3000) {
+        if (game.getAge() >= -3000) {
             return Player.RED;
         } else {
             return null;
