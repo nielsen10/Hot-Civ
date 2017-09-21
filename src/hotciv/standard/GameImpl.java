@@ -134,14 +134,16 @@ public class GameImpl implements Game {
         if(isEndOFTurn){
             yearUpdate();
             handleAllCities();
-
-
-            for (Position unit : unitMap.keySet()) {
-                unitMap.get(unit).setMoves(1);
-            }
+            resetMovesForUnits();
             getWinner();
         }
         nextPlayerInTurn();
+    }
+
+    private void resetMovesForUnits() {
+        for (Position unit : unitMap.keySet()) {
+            unitMap.get(unit).setMoves(1);
+        }
     }
 
     private void handleAllCities() {
