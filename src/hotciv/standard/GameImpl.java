@@ -99,28 +99,49 @@ public class GameImpl implements Game {
 
     public int getAge() { return year; }
 
-    public boolean moveUnit( Position from, Position to ) {
-        if(getUnitAt(from) == null) { return false; }
-        if(getUnitAt(from).getMoveCount() == 0) { return false; }
-        if(getUnitAt(from).getOwner() != getPlayerInTurn()) { return false; }
+    public boolean moveUnit(Position from, Position to) {
+        if (!isMovePossible(from, to)) { return false; }
+        isMoveOnCity(to);
+        updateUnitPosition(from, to);
+        return true;
+    }
 
-        if (tileMap.get(to).equals(GameConstants.OCEANS) || tileMap.get(to).equals(GameConstants.MOUNTAINS)) {
-            return false;
-        }
-        if(cityMap.get(to) != null) {
-            if (cityMap.get(to).getOwner() != getPlayerInTurn()) {
-                cityMap.get(to).setPlayer(getPlayerInTurn());
+    private void updateUnitPosition(Position from, Position to) {
+        UnitImpl movingUnit = (UnitImpl) getUnitAt(from);
+        movingUnit.setMoves(movingUnit.getMoveCount() - 1);
+        unitMap.remove(from, movingUnit);
+        movingUnit.setPosition(to);
+        unitMap.put(movingUnit.getPosition(), movingUnit);
+    }
+
+    private void isMoveOnCity(Position to) {
+        CityImpl cityUnderAttack = (CityImpl) getCityAt(to);
+        if (cityUnderAttack != null) {
+            if (cityUnderAttack.getOwner() != getPlayerInTurn()) {
+                cityUnderAttack.setPlayer(getPlayerInTurn());
             }
         }
-        int columnDiff = from.getColumn() - to.getColumn();
-        int rowDiff = from.getRow() - to.getRow();
-        if(columnDiff < 2 && columnDiff > -2 && rowDiff < 2 && rowDiff > -2) {
-            UnitImpl unit = unitMap.get(from);
-            unit.setMoves(unit.getMoveCount()-1);
-            unitMap.remove(from, unit);
-            unit.setPosition(to);
-            unitMap.put(unit.getPosition(), unit);
+    }
 
+    private boolean isMovePossible(Position from, Position to) {
+        int verticalDistanceOnMove = from.getColumn() - to.getColumn();
+        int horizontalDistanceOnMove = from.getRow() - to.getRow();
+        if (verticalDistanceOnMove >= 2 && verticalDistanceOnMove <= -2 && horizontalDistanceOnMove >= 2 && horizontalDistanceOnMove <= -2) { return false; }
+
+        if (getUnitAt(from) == null) {
+            return false;
+        }
+        if (getUnitAt(from).getMoveCount() == 0) {
+            return false;
+        }
+        if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
+            return false;
+        }
+        if (getTileAt(to).equals(GameConstants.OCEANS)) {
+            return false;
+        }
+        if (getTileAt(to).equals(GameConstants.MOUNTAINS)) {
+            return false;
         }
         return true;
     }
