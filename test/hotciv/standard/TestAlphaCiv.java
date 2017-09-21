@@ -194,8 +194,9 @@ public class TestAlphaCiv {
 
     @Test
     public void shouldNotWalkOnMountain() {
-        assertThat(alphaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
-        alphaGame.moveUnit(new Position(2, 0), new Position(2, 2));
+        alphaGame.endOfTurn();
+        assertThat(alphaGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
+        alphaGame.moveUnit(new Position(3, 2), new Position(2, 2));
         assertThat(alphaGame.getUnitAt(new Position(2, 2)), nullValue());
     }
 
@@ -212,7 +213,7 @@ public class TestAlphaCiv {
     }
 
     @Test
-    public void shouldBeRemovedWhenDefeatet() {
+    public void shouldBeRemovedWhenDefeated() {
         assertThat(alphaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
         alphaGame.moveUnit(new Position(2, 0), new Position(3, 1));
         alphaGame.endOfTurn();
@@ -237,7 +238,10 @@ public class TestAlphaCiv {
     @Test
     public void shouldOvertakeBlueCity() {
         assertThat(bCity.getOwner(), is(Player.BLUE));
-        alphaGame.moveUnit(new Position(2, 0), new Position(4, 1));
+        alphaGame.moveUnit(new Position(2, 0), new Position(3, 1));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
+        alphaGame.moveUnit(new Position(3, 1), new Position(4, 1));
         assertThat(bCity.getOwner(), is(Player.RED));
     }
 
@@ -245,7 +249,10 @@ public class TestAlphaCiv {
     public void shouldOvertakeRedCity() {
         alphaGame.endOfTurn();
         assertThat(rCity.getOwner(), is(Player.RED));
-        alphaGame.moveUnit(new Position(3, 2), new Position(1, 1));
+        alphaGame.moveUnit(new Position(3, 2), new Position(2, 1));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
+        alphaGame.moveUnit(new Position(2, 1), new Position(1, 1));
         assertThat(rCity.getOwner(), is(Player.BLUE));
     }
 
@@ -404,6 +411,8 @@ public class TestAlphaCiv {
     public void shouldOnlyBeAbleToMove1Field() {
         assertThat(alphaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
         alphaGame.moveUnit(new Position(2, 0), new Position(2, 1));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
         assertThat(alphaGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.ARCHER));
         alphaGame.moveUnit(new Position(2, 1), new Position(2, 8));
         assertThat(alphaGame.getUnitAt(new Position(2, 8)), is(nullValue()));
@@ -420,5 +429,19 @@ public class TestAlphaCiv {
         alphaGame.endOfTurn();
         alphaGame.moveUnit(new Position(2, 1), new Position(3, 1));
         assertThat(alphaGame.getUnitAt(new Position(3, 1)).getTypeString(), is(GameConstants.ARCHER));
+    }
+
+    @Test
+    public void shouldNotWalk2Steps() {
+        assertThat(alphaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
+        alphaGame.moveUnit(new Position(2,0), new Position(3,0));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
+        assertThat(alphaGame.getUnitAt(new Position(3, 0)).getTypeString(), is(GameConstants.ARCHER));
+
+
+        alphaGame.moveUnit(new Position(3, 0), new Position(3, 2));
+        assertThat(alphaGame.getUnitAt(new Position(3, 0)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(alphaGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
     }
 }

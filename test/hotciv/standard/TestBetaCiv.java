@@ -118,7 +118,10 @@ public class TestBetaCiv {
     @Test
     public void redShouldWinGameIfBlueCityIsTaken() {
         assertThat(betaBCity.getOwner(), is(Player.BLUE));
-        betaGame.moveUnit(new Position(2, 0), new Position(4, 1));
+        betaGame.moveUnit(new Position(2, 0), new Position(3, 1));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        betaGame.moveUnit(new Position(3, 1), new Position(4, 1));
         assertThat(betaBCity.getOwner(), is(Player.RED));
         assertThat(betaGame.getWinner(), is(Player.RED));
     }
@@ -127,7 +130,10 @@ public class TestBetaCiv {
     public void blueShouldWinGameIfRedCityIsTaken() {
         betaGame.endOfTurn();
         assertThat(betaRCity.getOwner(), is(Player.RED));
-        betaGame.moveUnit(new Position(3, 2), new Position(1, 1));
+        betaGame.moveUnit(new Position(3, 2), new Position(2, 1));
+        betaGame.endOfTurn();
+        betaGame.endOfTurn();
+        betaGame.moveUnit(new Position(2, 1), new Position(1, 1));
         assertThat(betaRCity.getOwner(), is(Player.BLUE));
         assertThat(betaGame.getWinner(), is(Player.BLUE));
     }

@@ -38,7 +38,6 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
-    private WorldStrategy worldStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
@@ -53,7 +52,6 @@ public class GameImpl implements Game {
         this.winningStrategy = winningStrategy;
         this.agingStrategy = agingStrategy;
         this.unitActionStrategy = unitActionStrategy;
-        this.worldStrategy = worldStrategy;
 
         for (int i = 0; i <= 15; i++) {
             for (int j = 0; j <= 15; j++) {
@@ -78,25 +76,21 @@ public class GameImpl implements Game {
         return tileMap.get(p);
     }
 
-    public Unit getUnitAt(Position p) {
-        return unitMap.get(p);
-    }
 
-    public City getCityAt(Position p) {
-        return cityMap.get(p);
-    }
+    public Unit getUnitAt( Position p ) { return unitMap.get(p); }
+
+    public City getCityAt( Position p ) { return cityMap.get(p); }
 
     public Player getPlayerInTurn() {
-        if (playerTurn == 1) {
+        if(playerTurn == 1) {
+
             return Player.RED;
         } else {
             return Player.BLUE;
         }
     }
 
-    public Player getWinner() {
-        return winningStrategy.calculateWinner(this);
-    }
+    public Player getWinner() { return winningStrategy.calculateWinner(this); }
 
     public int getAge() {
         return year;
@@ -104,11 +98,12 @@ public class GameImpl implements Game {
 
 
     public boolean moveUnit(Position from, Position to) {
-        if (!isMovePossible(from, to)) { return false; }
+        if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
         updateUnitPosition(from, to);
         return true;
     }
+
 
     private void updateUnitPosition(Position from, Position to) {
         UnitImpl movingUnit = (UnitImpl) getUnitAt(from);
@@ -130,60 +125,68 @@ public class GameImpl implements Game {
     private boolean isMovePossible(Position from, Position to) {
         int verticalDistanceOnMove = from.getColumn() - to.getColumn();
         int horizontalDistanceOnMove = from.getRow() - to.getRow();
-        if (verticalDistanceOnMove >= 2 && verticalDistanceOnMove <= -2 && horizontalDistanceOnMove >= 2 && horizontalDistanceOnMove <= -2) { return false; }
 
-        if (getUnitAt(from) == null) {
-            return false;
-        }
-        if (getUnitAt(from).getMoveCount() == 0) {
-            return false;
-        }
-        if (getUnitAt(from).getOwner() != getPlayerInTurn()) {
-            return false;
-        }
-        if (getTileAt(to).equals(GameConstants.OCEANS)) {
-            return false;
-        }
-        if (getTileAt(to).equals(GameConstants.MOUNTAINS)) {
-            return false;
-        }
+        if (verticalDistanceOnMove > 1 || verticalDistanceOnMove < -1 || horizontalDistanceOnMove > 1 || horizontalDistanceOnMove < -1) return false;
+
+        if (getUnitAt(from) == null) return false;
+        if (getUnitAt(from).getMoveCount() == 0) return false;
+        if (getUnitAt(from).getOwner() != getPlayerInTurn()) return false;
+        if (getTileAt(to).getTypeString() == GameConstants.OCEANS) return false;
+        if (getTileAt(to).getTypeString() == GameConstants.MOUNTAINS) return false;
         return true;
     }
 
     public void endOfTurn() {
-        if (playerTurn == 2) {
-            year = agingStrategy.calculateYear();
-            playerTurn = 1;
-            for (Position cityImpl : cityMap.keySet()) {
-                int cost = 0;
-                CityImpl city = cityMap.get(cityImpl);
-                city.addTreasury(6);
-                if (city.getProduction() == GameConstants.LEGION) {
-                    cost = 15;
-                } else if (city.getProduction() == GameConstants.ARCHER) {
-                    cost = 10;
-                } else if (city.getProduction() == GameConstants.SETTLER) {
-                    cost = 30;
-                }
-                if (city.getTreasury() >= cost) {
-                    UnitImpl newRedUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), Player.RED);
-                    city.addTreasury(-cost);
-                    unitMap.put(newRedUnit.getPosition(), newRedUnit);
-                }
-
-            }
-
-            for (Position unit : unitMap.keySet()) {
-                unitMap.get(unit).setMoves(1);
-            }
+        boolean isEndOFTurn = playerTurn == 2;
+        if(isEndOFTurn){
+            yearUpdate();
+            handleAllCities();
+            resetMovesForUnits();
             getWinner();
+        }
+        nextPlayerInTurn();
+    }
+
+    private void resetMovesForUnits() {
+        for (Position unit : unitMap.keySet()) {
+            unitMap.get(unit).setMoves(1);
+        }
+    }
+
+    private void handleAllCities() {
+        for (Position cityImpl : cityMap.keySet()) {
+            CityImpl city = cityMap.get(cityImpl);
+            addTreasuryToCity(city);
+            createUnitsFromCity(city);
+        }
+    }
+
+    private void createUnitsFromCity(CityImpl city) {
+        int cost = 0;
+        if(city.getProduction() == GameConstants.LEGION) cost = 15;
+        else if(city.getProduction() == GameConstants.ARCHER) cost = 10;
+        else if(city.getProduction() == GameConstants.SETTLER) cost = 30;
+        boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
+        if(cityHasEnoughTreasury) {
+            UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
+            city.addTreasury(-cost);
+            unitMap.put(newUnit.getPosition(), newUnit);
+        }
+    }
+
+    private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
+
+    private void nextPlayerInTurn() {
+        if(playerTurn==2){
+            playerTurn=1;
         } else {
             playerTurn++;
         }
     }
 
-    public void changeWorkForceFocusInCityAt(Position p, String balance) {
-    }
+    private void yearUpdate() { year = agingStrategy.calculateYear(); }
+
+    public void changeWorkForceFocusInCityAt( Position p, String balance ) {}
 
     public void changeProductionInCityAt(Position p, String unitType) {
         CityImpl city = (CityImpl) getCityAt(p);
