@@ -444,4 +444,18 @@ public class TestAlphaCiv {
         assertThat(alphaGame.getUnitAt(new Position(3, 0)).getTypeString(), is(GameConstants.ARCHER));
         assertThat(alphaGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
     }
+
+    @Test
+    public void shouldNotAttackOwnUnit(){
+        assertThat(alphaGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
+        alphaGame.moveUnit(new Position(2,0), new Position(3,1));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
+        alphaGame.moveUnit(new Position(3,1), new Position(4,2));
+        alphaGame.endOfTurn();
+        alphaGame.endOfTurn();
+        alphaGame.moveUnit(new Position(4,2), new Position(4,3));
+        assertThat(alphaGame.getUnitAt(new Position(4,3)).getTypeString(), is(GameConstants.SETTLER));
+        assertThat(alphaGame.getUnitAt(new Position (4,2)).getTypeString(), is(GameConstants.ARCHER));
+    }
 }

@@ -125,6 +125,7 @@ public class GameImpl implements Game {
         if (getUnitAt(from).getOwner() != getPlayerInTurn()) return false;
         if (getTileAt(to).getTypeString() == GameConstants.OCEANS) return false;
         if (getTileAt(to).getTypeString() == GameConstants.MOUNTAINS) return false;
+        if (getUnitAt(to) != null && getUnitAt(to).getOwner() == getPlayerInTurn()) return false;
         return true;
     }
 
