@@ -125,14 +125,21 @@ public class GameImpl implements Game {
     private boolean isMovePossible(Position from, Position to) {
         int verticalDistanceOnMove = from.getColumn() - to.getColumn();
         int horizontalDistanceOnMove = from.getRow() - to.getRow();
+        boolean isMoveTooLong = verticalDistanceOnMove > 1 || verticalDistanceOnMove < -1 || horizontalDistanceOnMove > 1 || horizontalDistanceOnMove < -1;
+        if (isMoveTooLong) return false;
 
-        if (verticalDistanceOnMove > 1 || verticalDistanceOnMove < -1 || horizontalDistanceOnMove > 1 || horizontalDistanceOnMove < -1) return false;
-
-        if (getUnitAt(from) == null) return false;
-        if (getUnitAt(from).getMoveCount() == 0) return false;
-        if (getUnitAt(from).getOwner() != getPlayerInTurn()) return false;
-        if (getTileAt(to).getTypeString() == GameConstants.OCEANS) return false;
-        if (getTileAt(to).getTypeString() == GameConstants.MOUNTAINS) return false;
+        boolean tryingToMoveNothing = getUnitAt(from) == null;
+        if (tryingToMoveNothing) return false;
+        boolean hasNoMovesLeft = getUnitAt(from).getMoveCount() == 0;
+        if (hasNoMovesLeft) return false;
+        boolean isNotOwnUnit = getUnitAt(from).getOwner() != getPlayerInTurn();
+        if (isNotOwnUnit) return false;
+        boolean isOcean = getTileAt(to).getTypeString() == GameConstants.OCEANS;
+        if (isOcean) return false;
+        boolean isMountain = getTileAt(to).getTypeString() == GameConstants.MOUNTAINS;
+        if (isMountain) return false;
+        boolean movingOnOwnUnit = getUnitAt(to) != null && getUnitAt(to).getOwner() == getPlayerInTurn();
+        if (movingOnOwnUnit) return false;
         return true;
     }
 
@@ -163,9 +170,12 @@ public class GameImpl implements Game {
 
     private void createUnitsFromCity(CityImpl city) {
         int cost = 0;
-        if(city.getProduction() == GameConstants.LEGION) cost = 15;
-        else if(city.getProduction() == GameConstants.ARCHER) cost = 10;
-        else if(city.getProduction() == GameConstants.SETTLER) cost = 30;
+        boolean cityProducingLegion = city.getProduction() == GameConstants.LEGION;
+        boolean cityProducingArcher = city.getProduction() == GameConstants.ARCHER;
+        boolean cityProducingSettler = city.getProduction() == GameConstants.SETTLER;
+        if(cityProducingLegion) cost = 15;
+        else if(cityProducingArcher) cost = 10;
+        else if(cityProducingSettler) cost = 30;
         boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
         if(cityHasEnoughTreasury) {
             UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
@@ -177,7 +187,9 @@ public class GameImpl implements Game {
     private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
 
     private void nextPlayerInTurn() {
-        if(playerTurn==2){
+        boolean isEndOFTurn = playerTurn == 2;
+
+        if(isEndOFTurn){
             playerTurn=1;
         } else {
             playerTurn++;
