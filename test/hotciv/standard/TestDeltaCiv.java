@@ -1,6 +1,8 @@
 package hotciv.standard;
 
+import AbstractFactory.DeltaCivFactory;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
+import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WorldStrategy.DeltaWorldStrategy;
 import hotciv.framework.Game;
@@ -22,7 +24,7 @@ public class TestDeltaCiv {
 
     @Before
     public void setUp(){
-        deltaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null, new DeltaWorldStrategy());
+        deltaGame = new GameImpl(new DeltaCivFactory());
     }
 
     @Test

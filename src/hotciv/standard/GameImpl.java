@@ -1,7 +1,12 @@
 package hotciv.standard;
 
+import AbstractFactory.CivFactory;
 import Strategies.AgingStrategies.AgingStrategy;
+import Strategies.AttackingStrategies.AttackingStrategy;
+import Strategies.DiceStrategies.DiceStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
+
 import Strategies.WorldStrategy.WorldStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
@@ -38,6 +43,8 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private WorldStrategy worldStrategy;
+    private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
@@ -47,12 +54,18 @@ public class GameImpl implements Game {
     private ArrayList<Position> spawnArray = new ArrayList<>();
     private int playerTurn = 1;
     private int year = -4000;
+
     public int round;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy){
-        this.winningStrategy = winningStrategy;
-        this.agingStrategy = agingStrategy;
-        this.unitActionStrategy = unitActionStrategy;
+    private int redBattlesWon;
+    private int blueBattlesWon;
+
+    public GameImpl(CivFactory factory){
+        this.winningStrategy = factory.createWinningStrategy();
+        this.agingStrategy = factory.createAgingStrategy();
+        this.unitActionStrategy = factory.createUnitActionStrategy();
+        this.attackingStrategy = factory.createAttackingStrategy();
+        this.worldStrategy = factory.createWorldStrategy();
 
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
@@ -95,7 +108,24 @@ public class GameImpl implements Game {
     public boolean moveUnit(Position from, Position to) {
         if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
+
+        if(!attackOnEnemySucceeded(from, to)) return false;
+
+
         updateUnitPosition(from, to);
+        return true;
+    }
+
+    private boolean attackOnEnemySucceeded(Position from, Position to) {
+        if(getUnitAt(to) != null) {
+            boolean successfulAttack = attackingStrategy.attack(this,from,to);
+            if (!successfulAttack) {
+                unitMap.remove(from, getUnitAt(from));
+                return false;
+            }
+            if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
+            if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
+        }
         return true;
     }
 
@@ -217,5 +247,12 @@ public class GameImpl implements Game {
             }
         }
         return null;
+    }
+    public int getRedBattlesWon() {
+        return redBattlesWon;
+    }
+
+    public int getBlueBattlesWon() {
+        return blueBattlesWon;
     }
 }

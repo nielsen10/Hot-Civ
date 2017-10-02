@@ -1,6 +1,8 @@
 package hotciv.standard;
 
+import AbstractFactory.GammaCivFactory;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
+import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
 import Strategies.UnitActionStrategies.GammaUnitActionStrategy;
@@ -25,7 +27,7 @@ public class TestGammaCiv {
 
     @Before
     public void setUp(){
-        gammaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), new GammaUnitActionStrategy(), new AlphaWorldStrategy());
+        gammaGame = new GameImpl(new GammaCivFactory());
         gammaRCity = gammaGame.getCityAt(new Position(1, 1));
         gammaBCity = gammaGame.getCityAt(new Position(4, 1));
         rCity = gammaGame.getCityAt(new Position(1, 1));

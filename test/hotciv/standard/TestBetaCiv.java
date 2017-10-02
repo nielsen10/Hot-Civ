@@ -1,7 +1,10 @@
 package hotciv.standard;
 
 
+import AbstractFactory.BetaCivFactory;
 import Strategies.AgingStrategies.BetaAgingStrategy;
+import Strategies.AttackingStrategies.AlphaAttackingStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.WinningStrategies.BetaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
 import hotciv.framework.City;
@@ -25,7 +28,7 @@ public class TestBetaCiv {
 
     @Before
     public void setUp(){
-        betaGame = new GameImpl(new BetaAgingStrategy(), new BetaWinningStrategy(), null, new AlphaWorldStrategy());
+        betaGame = new GameImpl(new BetaCivFactory());
         betaRCity = betaGame.getCityAt(new Position(1, 1));
         betaBCity = betaGame.getCityAt(new Position(4, 1));
     }
