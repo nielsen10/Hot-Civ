@@ -47,6 +47,7 @@ public class GameImpl implements Game {
     private ArrayList<Position> spawnArray = new ArrayList<>();
     private int playerTurn = 1;
     private int year = -4000;
+    public int round;
 
     public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy){
         this.winningStrategy = winningStrategy;
@@ -144,8 +145,11 @@ public class GameImpl implements Game {
             handleAllCities();
             resetMovesForUnits();
             getWinner();
+            round++;
         }
         nextPlayerInTurn();
+
+
     }
 
     private void resetMovesForUnits() {
