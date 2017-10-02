@@ -3,6 +3,9 @@ package hotciv.standard;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
+import Strategies.DiceStrategies.DiceStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
+import Strategies.DiceStrategies.RandomDiceStrategy;
 import Strategies.WinningStrategies.EpsilonWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
 import hotciv.framework.*;
@@ -25,7 +28,7 @@ public class TestEpsilonCiv {
     private Iterator<Position> iter;
     private List<Position> neighborhood;
     private Position center;
-    private AttackingStrategy epsilonAttackingStrategy;
+    private EpsilonAttackingStrategy epsilonAttackingStrategy;
     private Game epsilonGame;
 
     private List<Position> convertIteration2List(Iterator<Position> iter) {
@@ -36,12 +39,11 @@ public class TestEpsilonCiv {
 
     @Before
     public void setUp(){
-        epsilonGame = new GameImpl(new AlphaAgingStrategy(), new EpsilonWinningStrategy(), null, new AlphaWorldStrategy(), new EpsilonAttackingStrategy());
+        epsilonGame = new GameImpl(new AlphaAgingStrategy(), new EpsilonWinningStrategy(), null, new AlphaWorldStrategy(), new EpsilonAttackingStrategy(new FixedDiceStrategy()));
         stubGame = new GameStubForBattleTesting();
-        this.epsilonAttackingStrategy = new EpsilonAttackingStrategy();
+        this.epsilonAttackingStrategy = new EpsilonAttackingStrategy(new FixedDiceStrategy());
         rCity = stubGame.getCityAt(new Position(1, 1));
         bCity = stubGame.getCityAt(new Position(4, 1));
-
     }
 
     @Test
@@ -116,31 +118,26 @@ public class TestEpsilonCiv {
 
 
     @Test
-    public void shouldBe4StrengthOnRedUnitAt3_3() { //2 attacking strength + 2 support * 0 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,3), 2), is(4));
+    public void shouldBe4StrengthOnRedUnitAt3_3() { //2 attacking strength + 2 support * 0 for beeing on plain * 3 for fixed dice
+        assertThat(epsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,3), 2), is(12));
     }
 
     @Test
-    public void shouldBe5DefensiveStrenghtAt3_2(){ // 3 archer defensive strength + 2 support * 0 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,2), 3), is(5));
+    public void shouldBe5DefensiveStrenghtAt3_2(){ // 3 archer defensive strength + 2 support * 0 for beeing on plain * 3 for fixed dice
+        assertThat(epsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,2), 3), is(15));
     }
 
     @Test
-    public void shouldBe9DefensiveStrenghtAt1_1(){ // 3 archer defensive strength + 0 support * 3 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(1,1), 3), is(9));
+    public void shouldBe9DefensiveStrenghtAt1_1(){ // 3 archer defensive strength + 0 support * 3 for beeing on plain * 3 for fixed dice
+        assertThat(epsilonAttackingStrategy.getTotalStrength(stubGame, new Position(1,1), 3), is(27));
     }
 
     @Test
-    public void shouldBeRedWhoWins(){ //red unit at 3,2 has 2 attack + 2 support * 0. Blue archer at 4,4 has 3 defensive strength + 0 support * 0 for plain.
-        assertThat(epsilonAttackingStrategy.attack(stubGame, new Position(3,2), new Position(4,4)), is(true));
+    public void shouldBeRedWhoWins(){
+        assertThat(epsilonAttackingStrategy.attack(stubGame, new Position(3,2), new Position(4,4), new FixedDiceStrategy() ), is(true));
     }
 
-    @Test
-    public void shouldRemoveAttackingUnitIfLostBattle(){
-        assertThat(epsilonGame.getUnitAt(new Position(3,2)).getTypeString(), is(GameConstants.LEGION));
-        epsilonGame.moveUnit(new Position(4,3), new Position(3,2));
-        assertThat(epsilonGame.getUnitAt(new Position(3,2)).getTypeString(), is(GameConstants.LEGION));
-    }
+    
 
 
 

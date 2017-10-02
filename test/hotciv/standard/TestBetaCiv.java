@@ -3,6 +3,7 @@ package hotciv.standard;
 
 import Strategies.AgingStrategies.BetaAgingStrategy;
 import Strategies.AttackingStrategies.AlphaAttackingStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.WinningStrategies.BetaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
 import hotciv.framework.City;

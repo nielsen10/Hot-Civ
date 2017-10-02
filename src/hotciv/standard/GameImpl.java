@@ -2,6 +2,8 @@ package hotciv.standard;
 
 import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
+import Strategies.DiceStrategies.DiceStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 
 import Strategies.WorldStrategy.WorldStrategy;
@@ -40,6 +42,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private DiceStrategy diceStrategy;
     private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
@@ -111,7 +114,7 @@ public class GameImpl implements Game {
     }
 
     private boolean succesfulAttack(Position from, Position to) {
-        return attackingStrategy.attack(this,from, to);
+        return attackingStrategy.attack(this,from, to, diceStrategy);
     }
 
     private void updateUnitPosition(Position from, Position to) {

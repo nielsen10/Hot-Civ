@@ -1,12 +1,11 @@
 package Strategies.AttackingStrategies;
 
+import Strategies.DiceStrategies.DiceStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
 import hotciv.framework.*;
-import hotciv.standard.GameImpl;
-import hotciv.standard.UnitImpl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 /**
  * Created by csdev on 10/2/17.
@@ -17,13 +16,16 @@ public class EpsilonAttackingStrategy implements AttackingStrategy {
 
     private int initialDefensiveStrength;
     private int initialAttackingStrength;
+    private DiceStrategy diceStrategy;
 
-
-    public static int roll() {
-        return (int)(6.0 * Math.random()) + 1;
+    public EpsilonAttackingStrategy(DiceStrategy diceStrategy) {
+        this.diceStrategy = diceStrategy;
     }
+
+
     @Override
-    public boolean attack(Game game, Position from, Position to) {
+    public boolean attack(Game game, Position from, Position to, DiceStrategy diceStrategy) {
+        this.diceStrategy = diceStrategy;
         initialDefensiveStrength = game.getUnitAt(to).getDefensiveStrength();
         initialAttackingStrength = game.getUnitAt(from).getAttackingStrength();
         if(getTotalStrength(game, from, initialAttackingStrength) < getTotalStrength(game, to, initialDefensiveStrength)) {
@@ -32,13 +34,13 @@ public class EpsilonAttackingStrategy implements AttackingStrategy {
         return true;
     }
 
-    public static int getTotalStrength(Game game, Position to, int initialStrength) {
+    public int getTotalStrength(Game game, Position to, int initialStrength) {
         Unit unit = game.getUnitAt(to);
         int totalDefensiveStrength = 0;
         totalDefensiveStrength += initialStrength;
         totalDefensiveStrength += getFriendlySupport(game,to,unit.getOwner());
         totalDefensiveStrength *= getTerrainFactor(game,to);
-        int dice = roll();
+        int dice = diceStrategy.roll();
         totalDefensiveStrength *= dice;
         return totalDefensiveStrength;
     }
