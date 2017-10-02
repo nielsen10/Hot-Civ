@@ -118,8 +118,8 @@ public class GameImpl implements Game {
                 unitMap.remove(from, getUnitAt(from));
                 return false;
             }
-            //if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
-            //if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
+            if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
+            if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
         }
         return true;
     }

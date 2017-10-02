@@ -153,5 +153,34 @@ public class TestEpsilonCiv {
     }
 
 
+    @Test
+    public void shouldBeBlueWinnerAfter3SuccessfulAttacks(){
+        epsilonGame.changeProductionInCityAt(new Position(1,1), GameConstants.SETTLER);
+        epsilonGame.endOfTurn();
+        assertThat(epsilonGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
+        assertThat(epsilonGame.getUnitAt(new Position(3, 2)).getOwner(), is(Player.BLUE));
+        epsilonGame.moveUnit(new Position(3,2), new Position(4,3)); //kill settler
+        assertThat(epsilonGame.getWinner(), nullValue());
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        assertThat(epsilonGame.getUnitAt(new Position(4, 3)).getTypeString(), is(GameConstants.LEGION));
+        epsilonGame.moveUnit(new Position(4,3), new Position( 3,2));
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.moveUnit(new Position(3,2), new Position( 2,1));
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.moveUnit(new Position(2,1), new Position( 2,0)); //kill archer
+        assertThat(epsilonGame.getWinner(), nullValue());
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.moveUnit(new Position(1,1), new Position(2,1)); //move newly produced settler out of city
+        epsilonGame.endOfTurn();
+        epsilonGame.moveUnit(new Position(2,0), new Position(2,1)); //kill settler
+        assertThat(epsilonGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.LEGION));
+        assertThat(epsilonGame.getWinner(), is(Player.BLUE));
+
+    }
 
 }
