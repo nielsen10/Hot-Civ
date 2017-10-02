@@ -1,6 +1,7 @@
 package hotciv.standard;
 
 import Strategies.AgingStrategies.AgingStrategy;
+import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.WorldStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
@@ -38,6 +39,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
@@ -48,10 +50,11 @@ public class GameImpl implements Game {
     private int playerTurn = 1;
     private int year = -4000;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy){
+    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy, AttackingStrategy attackingStrategy){
         this.winningStrategy = winningStrategy;
         this.agingStrategy = agingStrategy;
         this.unitActionStrategy = unitActionStrategy;
+        this.attackingStrategy = attackingStrategy;
 
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
@@ -94,8 +97,16 @@ public class GameImpl implements Game {
     public boolean moveUnit(Position from, Position to) {
         if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
+        if(!succesfulAttack(from, to)) {
+            //remove unit
+            return false;
+        }
         updateUnitPosition(from, to);
         return true;
+    }
+
+    private boolean succesfulAttack(Position from, Position to) {
+        return attackingStrategy.attack(this,from, to);
     }
 
     private void updateUnitPosition(Position from, Position to) {
