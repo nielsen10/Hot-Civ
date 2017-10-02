@@ -2,6 +2,7 @@ package hotciv.standard;
 
 import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.AttackingStrategies.AlphaAttackingStrategy;
+import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
@@ -29,6 +30,7 @@ public class TestEpsilonCiv {
     private Iterator<Position> iter;
     private List<Position> neighborhood;
     private Position center;
+    private AttackingStrategy epsilonAttackingStrategy;
 
     private List<Position> convertIteration2List(Iterator<Position> iter) {
         List<Position> list = new ArrayList<>();
@@ -39,6 +41,7 @@ public class TestEpsilonCiv {
     @Before
     public void setUp(){
         EpsilonGame = new GameStubForBattleTesting();
+        this.epsilonAttackingStrategy = new EpsilonAttackingStrategy();
         rCity = EpsilonGame.getCityAt(new Position(1, 1));
         bCity = EpsilonGame.getCityAt(new Position(4, 1));
 
@@ -116,9 +119,27 @@ public class TestEpsilonCiv {
 
 
     @Test
-    public void shouldBe6StrengthOnRedUnitAt1_1() { //3 defensive streng + 2 support * 0 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalAttackingStrength(EpsilonGame, new Position(3,3)), is(5));
+    public void shouldBe4StrengthOnRedUnitAt3_3() { //2 attacking strength + 2 support * 0 for beeing on plain
+        assertThat(EpsilonAttackingStrategy.getTotalAttackingStrength(EpsilonGame, new Position(3,3)), is(4));
     }
+
+    @Test
+    public void shouldBe5DefensiveStrenghtAt3_2(){ // 3 archer defensive strength + 2 support * 0 for beeing on plain
+        assertThat(EpsilonAttackingStrategy.getTotalDefensiveStrength(EpsilonGame, new Position(3,2)), is(5));
+    }
+
+    @Test
+    public void shouldBe9DefensiveStrenghtAt1_1(){ // 3 archer defensive strength + 0 support * 3 for beeing on plain
+        assertThat(EpsilonAttackingStrategy.getTotalDefensiveStrength(EpsilonGame, new Position(1,1)), is(9));
+    }
+
+    @Test
+    public void shouldBeRedWhoWins(){ //red unit at 3,2 has 2 attack + 2 support * 0. Blue archer at 4,4 has 3 defensive strength + 0 support * 0 for plain.
+        assertThat(epsilonAttackingStrategy.attack(EpsilonGame, new Position(3,2), new Position(4,4)), is(true));
+    }
+
+
+
 
 
 }
