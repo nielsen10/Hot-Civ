@@ -1,5 +1,6 @@
 package hotciv.standard;
 
+import AbstractFactory.EpsilonCivFactory;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
@@ -39,7 +40,7 @@ public class TestEpsilonCiv {
 
     @Before
     public void setUp(){
-        epsilonGame = new GameImpl(new AlphaAgingStrategy(), new EpsilonWinningStrategy(), null, new AlphaWorldStrategy(), new EpsilonAttackingStrategy(new FixedDiceStrategy()));
+        epsilonGame = new GameImpl(new EpsilonCivFactory());
         stubGame = new GameStubForBattleTesting();
         this.epsilonAttackingStrategy = new EpsilonAttackingStrategy(new FixedDiceStrategy());
         rCity = stubGame.getCityAt(new Position(1, 1));

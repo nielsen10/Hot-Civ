@@ -1,5 +1,6 @@
 package hotciv.standard;
 
+import AbstractFactory.AlphaCivFactory;
 import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
@@ -49,7 +50,7 @@ public class TestAlphaCiv {
      */
     @Before
     public void setUp() {
-        alphaGame = new GameImpl(new AlphaAgingStrategy(), new AlphaWinningStrategy(), null, new AlphaWorldStrategy(), new AlphaAttackingStrategy());
+        alphaGame = new GameImpl(new AlphaCivFactory());
         rCity = alphaGame.getCityAt(new Position(1, 1));
         bCity = alphaGame.getCityAt(new Position(4, 1));
     }

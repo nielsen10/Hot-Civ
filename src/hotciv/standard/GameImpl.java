@@ -1,5 +1,6 @@
 package hotciv.standard;
 
+import AbstractFactory.CivFactory;
 import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.DiceStrategies.DiceStrategy;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
-    private DiceStrategy diceStrategy;
+    private WorldStrategy worldStrategy;
     private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
@@ -56,11 +57,12 @@ public class GameImpl implements Game {
     private int redBattlesWon;
     private int blueBattlesWon;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy, AttackingStrategy attackingStrategy){
-        this.winningStrategy = winningStrategy;
-        this.agingStrategy = agingStrategy;
-        this.unitActionStrategy = unitActionStrategy;
-        this.attackingStrategy = attackingStrategy;
+    public GameImpl(CivFactory factory){
+        this.winningStrategy = factory.createWinningStrategy();
+        this.agingStrategy = factory.createAgingStrategy();
+        this.unitActionStrategy = factory.createUnitActionStrategy();
+        this.attackingStrategy = factory.createAttackingStrategy();
+        this.worldStrategy = factory.createWorldStrategy();
 
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
