@@ -50,6 +50,8 @@ public class GameImpl implements Game {
     private ArrayList<Position> spawnArray = new ArrayList<>();
     private int playerTurn = 1;
     private int year = -4000;
+    private int redBattlesWon;
+    private int blueBattlesWon;
 
     public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy, AttackingStrategy attackingStrategy){
         this.winningStrategy = winningStrategy;
@@ -99,9 +101,11 @@ public class GameImpl implements Game {
         if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
         if(!succesfulAttack(from, to)) {
-            //remove unit
+            unitMap.remove(from, getUnitAt(from));
             return false;
         }
+        if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
+        if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
         updateUnitPosition(from, to);
         return true;
     }
@@ -225,5 +229,12 @@ public class GameImpl implements Game {
             }
         }
         return null;
+    }
+    public int getRedBattlesWon() {
+        return redBattlesWon;
+    }
+
+    public int getBlueBattlesWon() {
+        return blueBattlesWon;
     }
 }

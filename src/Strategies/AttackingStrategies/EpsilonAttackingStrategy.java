@@ -6,6 +6,7 @@ import hotciv.standard.UnitImpl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by csdev on 10/2/17.
@@ -14,30 +15,32 @@ import java.util.Iterator;
 
 public class EpsilonAttackingStrategy implements AttackingStrategy {
 
+    private int initialDefensiveStrength;
+    private int initialAttackingStrength;
 
+
+    public static int roll() {
+        return (int)(6.0 * Math.random()) + 1;
+    }
     @Override
     public boolean attack(Game game, Position from, Position to) {
-        if(getTotalAttackingStrength(game, from) < getTotalDefensiveStrength(game, to)) {
+        initialDefensiveStrength = game.getUnitAt(to).getDefensiveStrength();
+        initialAttackingStrength = game.getUnitAt(from).getAttackingStrength();
+        if(getTotalStrength(game, from, initialAttackingStrength) < getTotalStrength(game, to, initialDefensiveStrength)) {
             return false;
         }
         return true;
     }
 
-    public static int getTotalDefensiveStrength(Game game, Position to) {
+    public static int getTotalStrength(Game game, Position to, int initialStrength) {
         Unit unit = game.getUnitAt(to);
         int totalDefensiveStrength = 0;
-        totalDefensiveStrength += unit.getDefensiveStrength();
+        totalDefensiveStrength += initialStrength;
         totalDefensiveStrength += getFriendlySupport(game,to,unit.getOwner());
         totalDefensiveStrength *= getTerrainFactor(game,to);
+        int dice = roll();
+        totalDefensiveStrength *= dice;
         return totalDefensiveStrength;
-    }
-    public static int getTotalAttackingStrength(Game game, Position from) {
-        Unit unit = game.getUnitAt(from);
-        int totalAttackingStrength = 0;
-        totalAttackingStrength += unit.getAttackingStrength();
-        totalAttackingStrength += getFriendlySupport(game,from,unit.getOwner());
-        totalAttackingStrength *= getTerrainFactor(game,from);
-        return totalAttackingStrength;
     }
 
     public static Iterable<Position> get8Neighborhood(Position center) {

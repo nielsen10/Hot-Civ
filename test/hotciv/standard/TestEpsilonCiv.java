@@ -1,16 +1,11 @@
 package hotciv.standard;
 
 import Strategies.AgingStrategies.AlphaAgingStrategy;
-import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
-import Strategies.WinningStrategies.AlphaWinningStrategy;
+import Strategies.WinningStrategies.EpsilonWinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
-import com.sun.prism.es2.ES2Graphics;
-import hotciv.framework.City;
-import hotciv.framework.Game;
-import hotciv.framework.Player;
-import hotciv.framework.Position;
+import hotciv.framework.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.ArrayList;
@@ -24,13 +19,14 @@ import static org.hamcrest.CoreMatchers.*;
  */
 public class TestEpsilonCiv {
 
-    private Game EpsilonGame;
+    private Game stubGame;
     private City rCity;
     private City bCity;
     private Iterator<Position> iter;
     private List<Position> neighborhood;
     private Position center;
     private AttackingStrategy epsilonAttackingStrategy;
+    private Game epsilonGame;
 
     private List<Position> convertIteration2List(Iterator<Position> iter) {
         List<Position> list = new ArrayList<>();
@@ -40,10 +36,11 @@ public class TestEpsilonCiv {
 
     @Before
     public void setUp(){
-        EpsilonGame = new GameStubForBattleTesting();
+        epsilonGame = new GameImpl(new AlphaAgingStrategy(), new EpsilonWinningStrategy(), null, new AlphaWorldStrategy(), new EpsilonAttackingStrategy());
+        stubGame = new GameStubForBattleTesting();
         this.epsilonAttackingStrategy = new EpsilonAttackingStrategy();
-        rCity = EpsilonGame.getCityAt(new Position(1, 1));
-        bCity = EpsilonGame.getCityAt(new Position(4, 1));
+        rCity = stubGame.getCityAt(new Position(1, 1));
+        bCity = stubGame.getCityAt(new Position(4, 1));
 
     }
 
@@ -92,53 +89,58 @@ public class TestEpsilonCiv {
 
     @Test public void shouldGiveCorrectTerrainFactors() {
         // plains have multiplier 1
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(EpsilonGame, new Position(0,1)), is(1));
+        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,1)), is(1));
         // hills have multiplier 2
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(EpsilonGame, new Position(1,0)), is(2));
+        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,0)), is(2));
         // forest have multiplier 2
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(EpsilonGame, new Position(0,0)), is(2));
+        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,0)), is(2));
         // cities have multiplier 3
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(EpsilonGame, new Position(1,1)), is(3));
+        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,1)), is(3));
     }
 
     @Test public void shouldGiveSum1ForBlueAtP5_5() {
         assertThat("Blue imaginary unit at (5,5) should get +1 support",
-                EpsilonAttackingStrategy.getFriendlySupport( EpsilonGame, new Position(5,5), Player.BLUE), is(+1));
+                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(5,5), Player.BLUE), is(+1));
     }
 
     @Test public void shouldGiveSum0ForBlueAtP2_4() {
         assertThat("Blue unit at (2,4) should get +0 support",
-                EpsilonAttackingStrategy.getFriendlySupport( EpsilonGame, new Position(2,4), Player.BLUE), is(+0));
+                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(2,4), Player.BLUE), is(+0));
     }
 
     @Test public void shouldGiveSum2ForRedAtP2_4() {
-        EpsilonGame.moveUnit(new Position(2,0 ), new Position(3,1));
+        stubGame.moveUnit(new Position(2,0 ), new Position(3,1));
         assertThat("Red unit at (3,2) should get +2 support",
-                EpsilonAttackingStrategy.getFriendlySupport( EpsilonGame, new Position(3,2), Player.RED), is(+2));
+                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(3,2), Player.RED), is(+2));
     }
 
 
     @Test
     public void shouldBe4StrengthOnRedUnitAt3_3() { //2 attacking strength + 2 support * 0 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalAttackingStrength(EpsilonGame, new Position(3,3)), is(4));
+        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,3), 2), is(4));
     }
 
     @Test
     public void shouldBe5DefensiveStrenghtAt3_2(){ // 3 archer defensive strength + 2 support * 0 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalDefensiveStrength(EpsilonGame, new Position(3,2)), is(5));
+        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(3,2), 3), is(5));
     }
 
     @Test
     public void shouldBe9DefensiveStrenghtAt1_1(){ // 3 archer defensive strength + 0 support * 3 for beeing on plain
-        assertThat(EpsilonAttackingStrategy.getTotalDefensiveStrength(EpsilonGame, new Position(1,1)), is(9));
+        assertThat(EpsilonAttackingStrategy.getTotalStrength(stubGame, new Position(1,1), 3), is(9));
     }
 
     @Test
     public void shouldBeRedWhoWins(){ //red unit at 3,2 has 2 attack + 2 support * 0. Blue archer at 4,4 has 3 defensive strength + 0 support * 0 for plain.
-        assertThat(epsilonAttackingStrategy.attack(EpsilonGame, new Position(3,2), new Position(4,4)), is(true));
+        assertThat(epsilonAttackingStrategy.attack(stubGame, new Position(3,2), new Position(4,4)), is(true));
     }
 
-
+    @Test
+    public void shouldRemoveAttackingUnitIfLostBattle(){
+        assertThat(epsilonGame.getUnitAt(new Position(3,2)).getTypeString(), is(GameConstants.LEGION));
+        epsilonGame.moveUnit(new Position(4,3), new Position(3,2));
+        assertThat(epsilonGame.getUnitAt(new Position(3,2)).getTypeString(), is(GameConstants.LEGION));
+    }
 
 
 
