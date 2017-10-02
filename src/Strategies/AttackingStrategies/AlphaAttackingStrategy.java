@@ -10,7 +10,7 @@ import hotciv.standard.GameImpl;
  */
 public class AlphaAttackingStrategy implements AttackingStrategy {
       @Override
-    public boolean attack(Game game, Position from, Position to, DiceStrategy diceStrategy) {
+    public boolean attack(Game game, Position from, Position to) {
         return true;
     }
 }

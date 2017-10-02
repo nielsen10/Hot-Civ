@@ -24,8 +24,7 @@ public class EpsilonAttackingStrategy implements AttackingStrategy {
 
 
     @Override
-    public boolean attack(Game game, Position from, Position to, DiceStrategy diceStrategy) {
-        this.diceStrategy = diceStrategy;
+    public boolean attack(Game game, Position from, Position to) {
         initialDefensiveStrength = game.getUnitAt(to).getDefensiveStrength();
         initialAttackingStrength = game.getUnitAt(from).getAttackingStrength();
         if(getTotalStrength(game, from, initialAttackingStrength) < getTotalStrength(game, to, initialDefensiveStrength)) {

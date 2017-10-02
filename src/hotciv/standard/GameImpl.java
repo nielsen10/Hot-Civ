@@ -103,18 +103,25 @@ public class GameImpl implements Game {
     public boolean moveUnit(Position from, Position to) {
         if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
-        if(!succesfulAttack(from, to)) {
-            unitMap.remove(from, getUnitAt(from));
-            return false;
-        }
-        if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
-        if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
+
+        if(!attackOnEnemySucceeded(from, to)) return false;
+
+
         updateUnitPosition(from, to);
         return true;
     }
 
-    private boolean succesfulAttack(Position from, Position to) {
-        return attackingStrategy.attack(this,from, to, diceStrategy);
+    private boolean attackOnEnemySucceeded(Position from, Position to) {
+        if(getUnitAt(to) != null) {
+            boolean successfulAttack = attackingStrategy.attack(this,from,to);
+            if (!successfulAttack) {
+                unitMap.remove(from, getUnitAt(from));
+                return false;
+            }
+            //if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
+            //if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
+        }
+        return true;
     }
 
     private void updateUnitPosition(Position from, Position to) {

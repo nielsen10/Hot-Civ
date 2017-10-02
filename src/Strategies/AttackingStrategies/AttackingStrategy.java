@@ -9,5 +9,5 @@ import hotciv.framework.Position;
  */
 public interface AttackingStrategy {
 
-    public boolean attack(Game game, Position from, Position to, DiceStrategy diceStrategy);
+    public boolean attack(Game game, Position from, Position to);
 }

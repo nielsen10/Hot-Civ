@@ -134,10 +134,23 @@ public class TestEpsilonCiv {
 
     @Test
     public void shouldBeRedWhoWins(){
-        assertThat(epsilonAttackingStrategy.attack(stubGame, new Position(3,2), new Position(4,4), new FixedDiceStrategy() ), is(true));
+        assertThat(epsilonAttackingStrategy.attack(stubGame, new Position(3,2), new Position(4,4)), is(true));
     }
 
-    
+    //integration testing
+
+    @Test
+    public void shouldRemoveUnitIfBattleIsLost(){
+        assertThat(epsilonGame.getUnitAt(new Position(2, 0)).getTypeString(), is(GameConstants.ARCHER));
+        assertThat(epsilonGame.getUnitAt(new Position(2, 0)).getOwner(), is(Player.RED));
+        epsilonGame.moveUnit(new Position(2,0), new Position(3,1));
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        assertThat(epsilonGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
+        epsilonGame.moveUnit(new Position(3,1), new Position( 3,2));
+        assertThat(epsilonGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
+        assertThat(epsilonGame.getUnitAt(new Position(3, 1)), nullValue());
+    }
 
 
 
