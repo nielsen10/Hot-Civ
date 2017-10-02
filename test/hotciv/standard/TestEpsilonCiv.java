@@ -1,22 +1,18 @@
 package hotciv.standard;
 
 import AbstractFactory.EpsilonCivFactory;
-import Strategies.AgingStrategies.AlphaAgingStrategy;
-import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
-import Strategies.DiceStrategies.DiceStrategy;
 import Strategies.DiceStrategies.FixedDiceStrategy;
-import Strategies.DiceStrategies.RandomDiceStrategy;
-import Strategies.WinningStrategies.EpsilonWinningStrategy;
-import Strategies.WorldStrategy.AlphaWorldStrategy;
 import hotciv.framework.*;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import static org.junit.Assert.*;
+
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by csdev on 9/25/17.
@@ -146,6 +142,11 @@ public class TestEpsilonCiv {
         assertThat(epsilonGame.getUnitAt(new Position(2, 0)).getOwner(), is(Player.RED));
         epsilonGame.moveUnit(new Position(2,0), new Position(3,1));
         epsilonGame.endOfTurn();
+        epsilonGame.changeProductionInCityAt(new Position(4,1), GameConstants.ARCHER);
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
+        epsilonGame.endOfTurn();
         epsilonGame.endOfTurn();
         assertThat(epsilonGame.getUnitAt(new Position(3, 2)).getTypeString(), is(GameConstants.LEGION));
         epsilonGame.moveUnit(new Position(3,1), new Position( 3,2));
@@ -181,7 +182,8 @@ public class TestEpsilonCiv {
         epsilonGame.moveUnit(new Position(2,0), new Position(2,1)); //kill settler
         assertThat(epsilonGame.getUnitAt(new Position(2, 1)).getTypeString(), is(GameConstants.LEGION));
         assertThat(epsilonGame.getWinner(), is(Player.BLUE));
-
     }
+
+
 
 }

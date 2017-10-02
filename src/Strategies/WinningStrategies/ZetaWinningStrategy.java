@@ -15,8 +15,10 @@ public class ZetaWinningStrategy implements WinningStrategy {
     }
     @Override
     public Player calculateWinner(GameImpl game) {
-        if (game.round <= 20){
+        if (game.getAge() < -2000){
             winState = betaWin;
+            game.setBlueBattlesWon(0);
+            game.setRedBattlesWon(0);
         }else{
             winState = epsilonWin;
         }

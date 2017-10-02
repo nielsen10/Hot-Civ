@@ -55,8 +55,6 @@ public class GameImpl implements Game {
     private int playerTurn = 1;
     private int year = -4000;
 
-    public int round;
-
     private int redBattlesWon;
     private int blueBattlesWon;
 
@@ -175,7 +173,6 @@ public class GameImpl implements Game {
             handleAllCities();
             resetMovesForUnits();
             getWinner();
-            round++;
         }
         nextPlayerInTurn();
 
@@ -205,11 +202,14 @@ public class GameImpl implements Game {
         else if(cityProducingArcher) cost = 10;
         else if(cityProducingSettler) cost = 30;
         boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
-        if(cityHasEnoughTreasury) {
-            UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
-            city.addTreasury(-cost);
-            unitMap.put(newUnit.getPosition(), newUnit);
+        if(city.getProduction() != null){
+            if(cityHasEnoughTreasury) {
+                UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
+                city.addTreasury(-cost);
+                unitMap.put(newUnit.getPosition(), newUnit);
+            }
         }
+
     }
 
     private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
@@ -254,5 +254,13 @@ public class GameImpl implements Game {
 
     public int getBlueBattlesWon() {
         return blueBattlesWon;
+    }
+
+    public void setRedBattlesWon(int redBattlesWon) {
+        this.redBattlesWon = redBattlesWon;
+    }
+
+    public void setBlueBattlesWon(int blueBattlesWon) {
+        this.blueBattlesWon = blueBattlesWon;
     }
 }
