@@ -39,7 +39,7 @@ public class AlphaUnitProductionStrategy implements UnitProductionStrategy {
         boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
         if(city.getProduction() != null){
             if(cityHasEnoughTreasury) {
-                UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition(), spawnArray, game), city.getProduction(), city.getOwner());
+                UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition(), game), city.getProduction(), city.getOwner());
                 city.addTreasury(-cost);
                 unitMap.put(newUnit.getPosition(), newUnit);
             }
@@ -48,7 +48,7 @@ public class AlphaUnitProductionStrategy implements UnitProductionStrategy {
 
     }
 
-    public Position positionForNewUnit(Position p, ArrayList<Position> spawnArray, GameImpl game){
+    public Position positionForNewUnit(Position p, GameImpl game){
         for (Position pos: spawnArray) {
             int column = p.getColumn()+pos.getColumn();
             int row = p.getRow()+pos.getRow();

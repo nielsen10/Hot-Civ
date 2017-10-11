@@ -158,9 +158,9 @@ public class GameImpl implements Game {
     }
 
     public void endOfTurn() {
-        boolean isEndOFTurn = playerTurn == 2;
+        boolean isEndOfRound = playerTurn == 2;
 
-        if(isEndOFTurn){
+        if(isEndOfRound){
             yearUpdate();
             handleAllCities();
             resetMovesForUnits();
@@ -192,9 +192,9 @@ public class GameImpl implements Game {
     private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
 
     private void nextPlayerInTurn() {
-        boolean isEndOFTurn = playerTurn == 2;
+        boolean isEndOfRound = playerTurn == 2;
 
-        if(isEndOFTurn){
+        if(isEndOfRound){
             playerTurn=1;
         } else {
             playerTurn++;

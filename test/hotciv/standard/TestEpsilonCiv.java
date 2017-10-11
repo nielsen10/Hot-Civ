@@ -48,7 +48,7 @@ public class TestEpsilonCiv {
         // Simple learning test, showing typical use of
         // for loop
         List<Position> list = new ArrayList<>();
-        for (Position p : EpsilonAttackingStrategy.get8Neighborhood(new Position(8,8))) {
+        for (Position p : epsilonAttackingStrategy.get8Neighborhood(new Position(8,8))) {
             list.add(p);
         }
 
@@ -64,7 +64,7 @@ public class TestEpsilonCiv {
 
     @Test public void shouldGive3PositionsForP0_0() {
         center = new Position(0,0);
-        iter = EpsilonAttackingStrategy.get8NeighborhoodIterator(center);
+        iter = epsilonAttackingStrategy.get8NeighborhoodIterator(center);
         neighborhood = convertIteration2List( iter );
 
         assertThat(neighborhood.size(), is(3));
@@ -88,29 +88,29 @@ public class TestEpsilonCiv {
 
     @Test public void shouldGiveCorrectTerrainFactors() {
         // plains have multiplier 1
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,1)), is(1));
+        assertThat(epsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,1)), is(1));
         // hills have multiplier 2
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,0)), is(2));
+        assertThat(epsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,0)), is(2));
         // forest have multiplier 2
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,0)), is(2));
+        assertThat(epsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(0,0)), is(2));
         // cities have multiplier 3
-        assertThat(EpsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,1)), is(3));
+        assertThat(epsilonAttackingStrategy.getTerrainFactor(stubGame, new Position(1,1)), is(3));
     }
 
     @Test public void shouldGiveSum1ForBlueAtP5_5() {
         assertThat("Blue imaginary unit at (5,5) should get +1 support",
-                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(5,5), Player.BLUE), is(+1));
+                epsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(5,5), Player.BLUE), is(+1));
     }
 
     @Test public void shouldGiveSum0ForBlueAtP2_4() {
         assertThat("Blue unit at (2,4) should get +0 support",
-                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(2,4), Player.BLUE), is(+0));
+                epsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(2,4), Player.BLUE), is(+0));
     }
 
     @Test public void shouldGiveSum2ForRedAtP2_4() {
         stubGame.moveUnit(new Position(2,0 ), new Position(3,1));
         assertThat("Red unit at (3,2) should get +2 support",
-                EpsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(3,2), Player.RED), is(+2));
+                epsilonAttackingStrategy.getFriendlySupport(stubGame, new Position(3,2), Player.RED), is(+2));
     }
 
 
