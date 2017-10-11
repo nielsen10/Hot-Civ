@@ -7,6 +7,8 @@ import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
 import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
+import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.BetaWinningStrategy;
 import Strategies.WinningStrategies.EpsilonWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
@@ -41,5 +43,10 @@ public class ZetaCivFactory implements CivFactory{
     @Override
     public WorldStrategy createWorldStrategy() {
         return new AlphaWorldStrategy();
+    }
+
+    @Override
+    public UnitProductionStrategy createUnitProductionStrategy() {
+        return new AlphaUnitProductionStrategy();
     }
 }

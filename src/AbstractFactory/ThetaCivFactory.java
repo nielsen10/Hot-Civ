@@ -6,16 +6,17 @@ import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
 import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.ThetaUnitProductionStrategy;
 import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
-import Strategies.WorldStrategy.AlphaWorldStrategy;
+import Strategies.WorldStrategy.DeltaWorldStrategy;
 import Strategies.WorldStrategy.WorldStrategy;
 
 /**
- * Created by csdev on 10/2/17.
+ * Created by csdev on 10/11/17.
  */
-public class AlphaCivFactory implements CivFactory {
+public class ThetaCivFactory implements CivFactory {
     @Override
     public WinningStrategy createWinningStrategy() {
         return new AlphaWinningStrategy();
@@ -38,11 +39,11 @@ public class AlphaCivFactory implements CivFactory {
 
     @Override
     public WorldStrategy createWorldStrategy() {
-        return new AlphaWorldStrategy();
+        return new DeltaWorldStrategy();
     }
 
     @Override
     public UnitProductionStrategy createUnitProductionStrategy() {
-        return new AlphaUnitProductionStrategy();
+        return new ThetaUnitProductionStrategy();
     }
 }

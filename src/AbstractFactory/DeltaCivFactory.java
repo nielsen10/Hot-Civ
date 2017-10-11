@@ -5,6 +5,8 @@ import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
+import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.DeltaWorldStrategy;
@@ -37,5 +39,10 @@ public class DeltaCivFactory implements CivFactory {
     @Override
     public WorldStrategy createWorldStrategy() {
         return new DeltaWorldStrategy();
+    }
+
+    @Override
+    public UnitProductionStrategy createUnitProductionStrategy() {
+        return new AlphaUnitProductionStrategy();
     }
 }

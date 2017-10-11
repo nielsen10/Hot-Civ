@@ -6,6 +6,8 @@ import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.UnitActionStrategies.GammaUnitActionStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
+import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.AlphaWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
@@ -38,5 +40,10 @@ public class GammaCivFactory implements CivFactory {
     @Override
     public WorldStrategy createWorldStrategy() {
         return new AlphaWorldStrategy();
+    }
+
+    @Override
+    public UnitProductionStrategy createUnitProductionStrategy() {
+        return new AlphaUnitProductionStrategy();
     }
 }

@@ -7,6 +7,8 @@ import Strategies.AttackingStrategies.EpsilonAttackingStrategy;
 import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.DiceStrategies.RandomDiceStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
+import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.EpsilonWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.AlphaWorldStrategy;
@@ -39,5 +41,10 @@ public class EpsilonCivFactory implements CivFactory {
     @Override
     public WorldStrategy createWorldStrategy() {
         return new AlphaWorldStrategy();
+    }
+
+    @Override
+    public UnitProductionStrategy createUnitProductionStrategy() {
+        return new AlphaUnitProductionStrategy();
     }
 }

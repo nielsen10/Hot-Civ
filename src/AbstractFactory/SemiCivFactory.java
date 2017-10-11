@@ -8,6 +8,8 @@ import Strategies.DiceStrategies.DiceStrategy;
 import Strategies.DiceStrategies.FixedDiceStrategy;
 import Strategies.UnitActionStrategies.GammaUnitActionStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
+import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.EpsilonWinningStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 import Strategies.WorldStrategy.DeltaWorldStrategy;
@@ -40,5 +42,10 @@ public class SemiCivFactory implements CivFactory {
     @Override
     public WorldStrategy createWorldStrategy() {
         return new DeltaWorldStrategy();
+    }
+
+    @Override
+    public UnitProductionStrategy createUnitProductionStrategy() {
+        return new AlphaUnitProductionStrategy();
     }
 }

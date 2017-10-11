@@ -5,6 +5,7 @@ import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
 import Strategies.DiceStrategies.DiceStrategy;
 import Strategies.DiceStrategies.FixedDiceStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
 
 import Strategies.WorldStrategy.WorldStrategy;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private UnitProductionStrategy unitProductionStrategy;
     private WorldStrategy worldStrategy;
     private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
@@ -51,7 +53,6 @@ public class GameImpl implements Game {
     private HashMap<Position,UnitImpl> unitMap = new HashMap();
     private HashMap<Position,TileImpl> tileMap = new HashMap();
     private HashMap<Position,CityImpl> cityMap = new HashMap();
-    private ArrayList<Position> spawnArray = new ArrayList<>();
     private int playerTurn = 1;
     private int year = -4000;
 
@@ -64,6 +65,7 @@ public class GameImpl implements Game {
         this.unitActionStrategy = factory.createUnitActionStrategy();
         this.attackingStrategy = factory.createAttackingStrategy();
         this.worldStrategy = factory.createWorldStrategy();
+        this.unitProductionStrategy = factory.createUnitProductionStrategy();
 
         for(int i=0; i<=15; i++) {
             for(int j=0; j<=15; j++) {
@@ -72,16 +74,6 @@ public class GameImpl implements Game {
             }
         }
         worldStrategy.buildWorld(this, unitMap, tileMap, cityMap);
-
-        spawnArray.add(new Position(0,0));
-        spawnArray.add(new Position(-1,0));
-        spawnArray.add(new Position(-1,1));
-        spawnArray.add(new Position(0,1));
-        spawnArray.add(new Position(1,1));
-        spawnArray.add(new Position(1,0));
-        spawnArray.add(new Position(1,-1));
-        spawnArray.add(new Position(0,-1));
-        spawnArray.add(new Position(-1,-1));
     }
 
     public Tile getTileAt( Position p ) { return tileMap.get(p); }
@@ -194,22 +186,7 @@ public class GameImpl implements Game {
     }
 
     private void createUnitsFromCity(CityImpl city) {
-        int cost = 0;
-        boolean cityProducingLegion = city.getProduction() == GameConstants.LEGION;
-        boolean cityProducingArcher = city.getProduction() == GameConstants.ARCHER;
-        boolean cityProducingSettler = city.getProduction() == GameConstants.SETTLER;
-        if(cityProducingLegion) cost = 15;
-        else if(cityProducingArcher) cost = 10;
-        else if(cityProducingSettler) cost = 30;
-        boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
-        if(city.getProduction() != null){
-            if(cityHasEnoughTreasury) {
-                UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
-                city.addTreasury(-cost);
-                unitMap.put(newUnit.getPosition(), newUnit);
-            }
-        }
-
+        unitProductionStrategy.createUnit(city, unitMap, this);
     }
 
     private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
@@ -237,17 +214,6 @@ public class GameImpl implements Game {
         unitActionStrategy.deployUnitAction(p, this, unitMap, cityMap);
     }
 
-    public Position positionForNewUnit (Position p){
-        for (Position pos: spawnArray) {
-            int column = p.getColumn()+pos.getColumn();
-            int row = p.getRow()+pos.getRow();
-            Position validPos = new Position(row,column);
-            if(getUnitAt(validPos)==null) {
-                return validPos;
-            }
-        }
-        return null;
-    }
     public int getRedBattlesWon() {
         return redBattlesWon;
     }
