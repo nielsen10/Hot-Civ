@@ -83,4 +83,15 @@ public class TestThetaCiv {
         assertThat(thetaGame.getUnitAt(new Position(14,13)), nullValue());
         assertThat(thetaGame.getUnitAt(new Position(12,14)).getTypeString(), is(GameConstants.GALLEY));
     }
+
+    @Test
+    public void shouldHaveCorrectAttackAndDefensiveValues() {
+        thetaGame.changeProductionInCityAt(new Position(15,13), GameConstants.GALLEY);
+        for(int i=0; i<10;i++) {
+            thetaGame.endOfTurn();
+        }
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getAttackingStrength(), is(8));
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getDefensiveStrength(), is(2));
+    }
 }

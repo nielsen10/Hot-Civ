@@ -34,17 +34,18 @@ public class UnitImpl implements Unit {
     }
 
     private void initialStrength() {
-       if(type == GameConstants.ARCHER) {
-           defensiveStrength = 3;
-           attackingStrength = 2;
-       }
-        else if(type ==GameConstants.LEGION) {
+        if (type == GameConstants.ARCHER) {
+            defensiveStrength = 3;
+            attackingStrength = 2;
+        } else if (type == GameConstants.LEGION) {
             defensiveStrength = 2;
             attackingStrength = 4;
-        }
-        else{
+        } else if (type.equals(GameConstants.SETTLER)) {
             defensiveStrength = 3;
             attackingStrength = 0;
+        } else if (type.equals(GameConstants.GALLEY)) {
+            defensiveStrength = 2;
+            attackingStrength = 8;
         }
     }
 
