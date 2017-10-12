@@ -4,6 +4,7 @@ import Strategies.AgingStrategies.AgingStrategy;
 import Strategies.AgingStrategies.AlphaAgingStrategy;
 import Strategies.AttackingStrategies.AlphaAttackingStrategy;
 import Strategies.AttackingStrategies.AttackingStrategy;
+import Strategies.UnitActionStrategies.ThetaUnitActionStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
 import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
 import Strategies.UnitProductionStrategies.ThetaUnitProductionStrategy;
@@ -34,7 +35,7 @@ public class ThetaCivFactory implements CivFactory {
 
     @Override
     public UnitActionStrategy createUnitActionStrategy() {
-        return null;
+        return new ThetaUnitActionStrategy();
     }
 
     @Override

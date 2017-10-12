@@ -76,6 +76,11 @@ public class TestThetaCiv {
         assertThat(thetaGame.getUnitAt(new Position(14,13)).getMoveCount(), is(2));
         thetaGame.moveUnit(new Position(14,13), new Position(13,13));
         assertThat(thetaGame.getUnitAt(new Position(13,13)).getMoveCount(), is(1));
+        thetaGame.moveUnit(new Position(13,13), new Position(12,13)); //moving onto land
+        assertThat(thetaGame.getUnitAt(new Position(12,13)), nullValue()); //nothing because Galley cannot move to land
+        //therefore Galley cannot attack units on land, because attacking is resolved after checking if the move is possible
+
+        assertThat(thetaGame.getUnitAt(new Position(13,13)).getMoveCount(), is(1));
         thetaGame.moveUnit(new Position(13,13), new Position(12,14));
         assertThat(thetaGame.getUnitAt(new Position(12,14)).getMoveCount(), is(0));
 
@@ -93,5 +98,16 @@ public class TestThetaCiv {
         assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
         assertThat(thetaGame.getUnitAt(new Position(14,13)).getAttackingStrength(), is(8));
         assertThat(thetaGame.getUnitAt(new Position(14,13)).getDefensiveStrength(), is(2));
+    }
+
+    @Test
+    public void galleyShouldColonizeOnLand() {
+        thetaGame.changeProductionInCityAt(new Position(15,13), GameConstants.GALLEY);
+        for(int i=0; i<10;i++) {
+            thetaGame.endOfTurn();
+        }
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
+        thetaGame.performUnitActionAt(new Position(14,13)); //should make city next to other city, through clockwise order
+        assertThat(thetaGame.getCityAt(new Position(15,12)).getOwner(), is(Player.RED)); //new city made by galley
     }
 }
