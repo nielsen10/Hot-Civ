@@ -1,5 +1,7 @@
 package Strategies.UnitProductionStrategies;
 
+import hotciv.framework.City;
+import hotciv.framework.Game;
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
 import hotciv.standard.CityImpl;
@@ -28,7 +30,7 @@ public class AlphaUnitProductionStrategy implements UnitProductionStrategy {
         spawnArray.add(new Position(-1,-1));
     }
     @Override
-    public void createUnit(CityImpl city, HashMap<Position, UnitImpl> unitMap, GameImpl game) {
+    public void createUnit(CityImpl city, HashMap<Position, UnitImpl> unitMap, Game game) {
         int cost = 0;
         boolean cityProducingLegion = city.getProduction() == GameConstants.LEGION;
         boolean cityProducingArcher = city.getProduction() == GameConstants.ARCHER;
@@ -48,7 +50,7 @@ public class AlphaUnitProductionStrategy implements UnitProductionStrategy {
 
     }
 
-    public Position positionForNewUnit(Position p, GameImpl game){
+    public Position positionForNewUnit(Position p, Game game){
         for (Position pos: spawnArray) {
             int column = p.getColumn()+pos.getColumn();
             int row = p.getRow()+pos.getRow();

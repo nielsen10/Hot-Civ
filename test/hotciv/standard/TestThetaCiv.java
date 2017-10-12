@@ -4,10 +4,7 @@ import AbstractFactory.SemiCivFactory;
 import AbstractFactory.ThetaCivFactory;
 import Strategies.UnitProductionStrategies.AlphaUnitProductionStrategy;
 import Strategies.UnitProductionStrategies.ThetaUnitProductionStrategy;
-import hotciv.framework.Game;
-import hotciv.framework.GameConstants;
-import hotciv.framework.Player;
-import hotciv.framework.Position;
+import hotciv.framework.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,28 +19,50 @@ import static org.junit.Assert.assertThat;
  */
 public class TestThetaCiv {
 
-    private Game thetaGame;
+    private GameImpl thetaGame;
     private Game stubGame;
-    private AlphaUnitProductionStrategy thetaUnitProductionStrategy;
+    private ThetaUnitProductionStrategy thetaUnitProductionStrategy;
     private CityImpl city;
-    private HashMap<Position,UnitImpl> unitMap;
+    private HashMap<Position,UnitImpl> unitMap = new HashMap<>();
 
 
     @Before
     public void setUp(){
-        thetaUnitProductionStrategy = new AlphaUnitProductionStrategy();
         thetaGame = new GameImpl(new ThetaCivFactory());
-        stubGame = new GameStubForThetaTesting();
-        city = new CityImpl(Player.RED, new Position(1,1));
+
+        CityImpl redCity = new CityImpl(Player.RED, new Position(15,13));
+        CityImpl blueCity = new CityImpl(Player.RED, new Position(10,13));
+        thetaGame.addCity(redCity.getPosition(), redCity);
+        thetaGame.addCity(blueCity.getPosition(), blueCity);
+
+    }
+    
+    @Test
+    public void shouldMakeGalleyOnOcean() {
+        for(int i=0; i<10;i++) {
+            thetaGame.endOfTurn();
+        }
+        assertThat(thetaGame.getCityAt(new Position(15,13)).getTreasury(), is(30));
+        thetaGame.changeProductionInCityAt(new Position(15,13), GameConstants.GALLEY);
+        thetaGame.endOfTurn();
+        thetaGame.endOfTurn();
+        assertThat(thetaGame.getUnitAt(new Position(15,13)), nullValue()); //on plains
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY)); //on ocean!!! \o/
 
     }
 
     @Test
-    public void something() {
-        thetaUnitProductionStrategy.createUnit(city,unitMap, (GameImpl) stubGame);
-        
-        //AlphaUnitProductionStrategy.createUnit(stubGame.getUnitAt(new Position(0,0)).getTypeString(), is(GameConstants.GALLEY));
-        //assertThat(stubGame.getUnitAt(new Position(0,0)).getMoveCount(), is(2));
+    public void shouldSubtract30TreasuryWhenProducingGalley() {
+        for(int i=0; i<8;i++) {
+            thetaGame.endOfTurn();
+        }
+        assertThat(thetaGame.getCityAt(new Position(15,13)).getTreasury(), is(24));
+        thetaGame.changeProductionInCityAt(new Position(15,13), GameConstants.GALLEY);
+        thetaGame.endOfTurn();
+        thetaGame.endOfTurn();
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
+        assertThat(thetaGame.getCityAt(new Position(15,13)).getTreasury(), is(0));
+
     }
 
     /* @Test

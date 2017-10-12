@@ -229,4 +229,8 @@ public class GameImpl implements Game {
     public void setBlueBattlesWon(int blueBattlesWon) {
         this.blueBattlesWon = blueBattlesWon;
     }
+
+    public void addCity(Position position, CityImpl city) {
+        cityMap.put(position,city);
+    }
 }
