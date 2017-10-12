@@ -109,5 +109,6 @@ public class TestThetaCiv {
         assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
         thetaGame.performUnitActionAt(new Position(14,13)); //should make city next to other city, through clockwise order
         assertThat(thetaGame.getCityAt(new Position(15,12)).getOwner(), is(Player.RED)); //new city made by galley
+        assertThat(thetaGame.getUnitAt(new Position(14,13)), nullValue());        
     }
 }
