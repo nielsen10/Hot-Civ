@@ -148,9 +148,11 @@ public class GameImpl implements Game {
         if (hasNoMovesLeft) return false;
         boolean isNotOwnUnit = getUnitAt(from).getOwner() != getPlayerInTurn();
         if (isNotOwnUnit) return false;
-        boolean isOcean = getTileAt(to).getTypeString() == GameConstants.OCEANS;
+        boolean isOcean = getTileAt(to).getTypeString().equals(GameConstants.OCEANS) && getUnitAt(from).getTypeString() != GameConstants.GALLEY;
         if (isOcean) return false;
-        boolean isMountain = getTileAt(to).getTypeString() == GameConstants.MOUNTAINS;
+        boolean isLand = getTileAt(to).getTypeString()!= GameConstants.OCEANS && getUnitAt(from).getTypeString().equals(GameConstants.GALLEY);
+        if(isLand) return false;
+        boolean isMountain = getTileAt(to).getTypeString().equals(GameConstants.MOUNTAINS);
         if (isMountain) return false;
         boolean movingOnOwnUnit = getUnitAt(to) != null && getUnitAt(to).getOwner() == getPlayerInTurn();
         if (movingOnOwnUnit) return false;
@@ -173,7 +175,7 @@ public class GameImpl implements Game {
 
     private void resetMovesForUnits() {
         for (Position unit : unitMap.keySet()) {
-            unitMap.get(unit).setMoves(1);
+            unitMap.get(unit).resetMoves();
         }
     }
 

@@ -36,7 +36,7 @@ public class TestThetaCiv {
         thetaGame.addCity(blueCity.getPosition(), blueCity);
 
     }
-    
+
     @Test
     public void shouldMakeGalleyOnOcean() {
         for(int i=0; i<10;i++) {
@@ -65,15 +65,22 @@ public class TestThetaCiv {
 
     }
 
-    /* @Test
-    public void shouldMakeGalleyAfter5Round() {
+    @Test
+    public void shouldBeAbleToMove2WithGalley() {
+        thetaGame.changeProductionInCityAt(new Position(15,13), GameConstants.GALLEY);
         for(int i=0; i<10;i++) {
             thetaGame.endOfTurn();
         }
-        assertThat(thetaGame.getCityAt(new Position(1,1)).getTreasury(), is(30));
-        thetaGame.changeProductionInCityAt(new Position(1,1), GameConstants.GALLEY);
-        thetaGame.endOfTurn();
-        thetaGame.endOfTurn();
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getTypeString(), is(GameConstants.GALLEY));
 
-    } */
+        assertThat(thetaGame.getUnitAt(new Position(14,13)).getMoveCount(), is(2));
+        thetaGame.moveUnit(new Position(14,13), new Position(13,13));
+        assertThat(thetaGame.getUnitAt(new Position(13,13)).getMoveCount(), is(1));
+        thetaGame.moveUnit(new Position(13,13), new Position(12,14));
+        assertThat(thetaGame.getUnitAt(new Position(12,14)).getMoveCount(), is(0));
+
+        assertThat(thetaGame.getUnitAt(new Position(13,13)), nullValue());
+        assertThat(thetaGame.getUnitAt(new Position(14,13)), nullValue());
+        assertThat(thetaGame.getUnitAt(new Position(12,14)).getTypeString(), is(GameConstants.GALLEY));
+    }
 }

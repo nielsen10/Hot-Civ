@@ -27,6 +27,8 @@ public class UnitImpl implements Unit {
         initialStrength();
         if (type == GameConstants.ARCHER || type == GameConstants.LEGION || type == GameConstants.SETTLER) {
             this.moves = 1;
+        } else if (type == GameConstants.GALLEY) {
+            this.moves = 2;
         }
         fortified = false;
     }
@@ -99,4 +101,8 @@ public class UnitImpl implements Unit {
         return fortified;
     }
 
+    public void resetMoves() {
+        if(type == GameConstants.GALLEY) moves = 2;
+        else moves = 1;
+    }
 }
