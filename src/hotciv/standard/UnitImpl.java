@@ -17,17 +17,36 @@ public class UnitImpl implements Unit {
     private int defensiveStrength;
     private int moves;
     private boolean fortified;
+    private int attackingStrength;
 
 
     public UnitImpl(Position p, String t, Player pl) {
         this.position = p;
         this.type = t;
         this.player = pl;
-        defensiveStrength = 3;
+        initialStrength();
         if (type == GameConstants.ARCHER || type == GameConstants.LEGION || type == GameConstants.SETTLER) {
             this.moves = 1;
+        } else if (type == GameConstants.GALLEY) {
+            this.moves = 2;
         }
         fortified = false;
+    }
+
+    private void initialStrength() {
+        if (type == GameConstants.ARCHER) {
+            defensiveStrength = 3;
+            attackingStrength = 2;
+        } else if (type == GameConstants.LEGION) {
+            defensiveStrength = 2;
+            attackingStrength = 4;
+        } else if (type.equals(GameConstants.SETTLER)) {
+            defensiveStrength = 3;
+            attackingStrength = 0;
+        } else if (type.equals(GameConstants.GALLEY)) {
+            defensiveStrength = 2;
+            attackingStrength = 8;
+        }
     }
 
 
@@ -56,7 +75,7 @@ public class UnitImpl implements Unit {
 
     @Override
     public int getAttackingStrength() {
-        return 0;
+        return attackingStrength;
     }
 
     public Position getPosition() {
@@ -83,4 +102,8 @@ public class UnitImpl implements Unit {
         return fortified;
     }
 
+    public void resetMoves() {
+        if(type == GameConstants.GALLEY) moves = 2;
+        else moves = 1;
+    }
 }

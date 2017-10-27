@@ -1,7 +1,13 @@
 package hotciv.standard;
 
+import AbstractFactory.CivFactory;
 import Strategies.AgingStrategies.AgingStrategy;
+import Strategies.AttackingStrategies.AttackingStrategy;
+import Strategies.DiceStrategies.DiceStrategy;
+import Strategies.DiceStrategies.FixedDiceStrategy;
+import Strategies.UnitProductionStrategies.UnitProductionStrategy;
 import Strategies.WinningStrategies.WinningStrategy;
+
 import Strategies.WorldStrategy.WorldStrategy;
 import Strategies.UnitActionStrategies.UnitActionStrategy;
 import hotciv.framework.*;
@@ -38,20 +44,28 @@ import java.util.HashMap;
 
 public class GameImpl implements Game {
 
+    private UnitProductionStrategy unitProductionStrategy;
+    private WorldStrategy worldStrategy;
+    private AttackingStrategy attackingStrategy;
     private UnitActionStrategy unitActionStrategy;
     private WinningStrategy winningStrategy;
     private AgingStrategy agingStrategy;
-    private HashMap<Position, UnitImpl> unitMap = new HashMap();
-    private HashMap<Position, TileImpl> tileMap = new HashMap();
-    private HashMap<Position, CityImpl> cityMap = new HashMap();
-    private ArrayList<Position> spawnArray = new ArrayList<>();
+    private HashMap<Position,UnitImpl> unitMap = new HashMap();
+    private HashMap<Position,TileImpl> tileMap = new HashMap();
+    private HashMap<Position,CityImpl> cityMap = new HashMap();
     private int playerTurn = 1;
     private int year = -4000;
 
-    public GameImpl(AgingStrategy agingStrategy, WinningStrategy winningStrategy, UnitActionStrategy unitActionStrategy, WorldStrategy worldStrategy) {
-        this.winningStrategy = winningStrategy;
-        this.agingStrategy = agingStrategy;
-        this.unitActionStrategy = unitActionStrategy;
+    private int redBattlesWon;
+    private int blueBattlesWon;
+
+    public GameImpl(CivFactory factory) {
+        this.winningStrategy = factory.createWinningStrategy();
+        this.agingStrategy = factory.createAgingStrategy();
+        this.unitActionStrategy = factory.createUnitActionStrategy();
+        this.attackingStrategy = factory.createAttackingStrategy();
+        this.worldStrategy = factory.createWorldStrategy();
+        this.unitProductionStrategy = factory.createUnitProductionStrategy();
 
         for (int i = 0; i <= 15; i++) {
             for (int j = 0; j <= 15; j++) {
@@ -60,20 +74,12 @@ public class GameImpl implements Game {
             }
         }
         worldStrategy.buildWorld(this, unitMap, tileMap, cityMap);
-
-        spawnArray.add(new Position(0, 0));
-        spawnArray.add(new Position(-1, 0));
-        spawnArray.add(new Position(-1, 1));
-        spawnArray.add(new Position(0, 1));
-        spawnArray.add(new Position(1, 1));
-        spawnArray.add(new Position(1, 0));
-        spawnArray.add(new Position(1, -1));
-        spawnArray.add(new Position(0, -1));
-        spawnArray.add(new Position(-1, -1));
     }
+
 
     public Tile getTileAt(Position p) {
         return tileMap.get(p);
+
     }
 
 
@@ -100,10 +106,26 @@ public class GameImpl implements Game {
     public boolean moveUnit(Position from, Position to) {
         if (! isMovePossible(from, to)) return false;
         isMoveOnCity(to);
+
+        if(!attackOnEnemySucceeded(from, to)) return false;
+
+
         updateUnitPosition(from, to);
         return true;
     }
 
+    private boolean attackOnEnemySucceeded(Position from, Position to) {
+        if(getUnitAt(to) != null) {
+            boolean successfulAttack = attackingStrategy.attack(this,from,to);
+            if (!successfulAttack) {
+                unitMap.remove(from, getUnitAt(from));
+                return false;
+            }
+            if(getPlayerInTurn() == Player.RED) redBattlesWon ++;
+            if(getPlayerInTurn() == Player.BLUE) blueBattlesWon ++;
+        }
+        return true;
+    }
 
     private void updateUnitPosition(Position from, Position to) {
         UnitImpl movingUnit = (UnitImpl) getUnitAt(from);
@@ -134,9 +156,11 @@ public class GameImpl implements Game {
         if (hasNoMovesLeft) return false;
         boolean isNotOwnUnit = getUnitAt(from).getOwner() != getPlayerInTurn();
         if (isNotOwnUnit) return false;
-        boolean isOcean = getTileAt(to).getTypeString() == GameConstants.OCEANS;
+        boolean isOcean = getTileAt(to).getTypeString().equals(GameConstants.OCEANS) && getUnitAt(from).getTypeString() != GameConstants.GALLEY;
         if (isOcean) return false;
-        boolean isMountain = getTileAt(to).getTypeString() == GameConstants.MOUNTAINS;
+        boolean isLand = getTileAt(to).getTypeString()!= GameConstants.OCEANS && getUnitAt(from).getTypeString().equals(GameConstants.GALLEY);
+        if(isLand) return false;
+        boolean isMountain = getTileAt(to).getTypeString().equals(GameConstants.MOUNTAINS);
         if (isMountain) return false;
         boolean movingOnOwnUnit = getUnitAt(to) != null && getUnitAt(to).getOwner() == getPlayerInTurn();
         if (movingOnOwnUnit) return false;
@@ -144,19 +168,22 @@ public class GameImpl implements Game {
     }
 
     public void endOfTurn() {
-        boolean isEndOFTurn = playerTurn == 2;
-        if(isEndOFTurn){
+        boolean isEndOfRound = playerTurn == 2;
+
+        if(isEndOfRound){
             yearUpdate();
             handleAllCities();
             resetMovesForUnits();
             getWinner();
         }
         nextPlayerInTurn();
+
+
     }
 
     private void resetMovesForUnits() {
         for (Position unit : unitMap.keySet()) {
-            unitMap.get(unit).setMoves(1);
+            unitMap.get(unit).resetMoves();
         }
     }
 
@@ -169,27 +196,15 @@ public class GameImpl implements Game {
     }
 
     private void createUnitsFromCity(CityImpl city) {
-        int cost = 0;
-        boolean cityProducingLegion = city.getProduction() == GameConstants.LEGION;
-        boolean cityProducingArcher = city.getProduction() == GameConstants.ARCHER;
-        boolean cityProducingSettler = city.getProduction() == GameConstants.SETTLER;
-        if(cityProducingLegion) cost = 15;
-        else if(cityProducingArcher) cost = 10;
-        else if(cityProducingSettler) cost = 30;
-        boolean cityHasEnoughTreasury = city.getTreasury() >= cost;
-        if(cityHasEnoughTreasury) {
-            UnitImpl newUnit = new UnitImpl(positionForNewUnit(city.getPosition()), city.getProduction(), city.getOwner());
-            city.addTreasury(-cost);
-            unitMap.put(newUnit.getPosition(), newUnit);
-        }
+        unitProductionStrategy.createUnit(city, unitMap, this);
     }
 
     private void addTreasuryToCity(CityImpl city) { city.addTreasury(6); }
 
     private void nextPlayerInTurn() {
-        boolean isEndOFTurn = playerTurn == 2;
+        boolean isEndOfRound = playerTurn == 2;
 
-        if(isEndOFTurn){
+        if(isEndOfRound){
             playerTurn=1;
         } else {
             playerTurn++;
@@ -209,15 +224,24 @@ public class GameImpl implements Game {
         unitActionStrategy.deployUnitAction(p, this, unitMap, cityMap);
     }
 
-    public Position positionForNewUnit(Position p) {
-        for (Position pos : spawnArray) {
-            int column = p.getColumn() + pos.getColumn();
-            int row = p.getRow() + pos.getRow();
-            Position validPos = new Position(row, column);
-            if (getUnitAt(validPos) == null) {
-                return validPos;
-            }
-        }
-        return null;
+    public int getRedBattlesWon() {
+        return redBattlesWon;
+    }
+
+    public int getBlueBattlesWon() {
+        return blueBattlesWon;
+    }
+
+    public void setRedBattlesWon(int redBattlesWon) {
+        this.redBattlesWon = redBattlesWon;
+    }
+
+    public void setBlueBattlesWon(int blueBattlesWon) {
+        this.blueBattlesWon = blueBattlesWon;
+    }
+
+    public void addCity(Position position, CityImpl city) {
+        cityMap.put(position,city);
+
     }
 }
