@@ -31,6 +31,7 @@
   
   <property name="junit.jar" value="lib/junit-4.12.jar"/>
   <property name="hamcrest.jar" value="lib/hamcrest-core-1.3.jar"/>
+  <property name="fractal.jar" value="lib/fractal.jar"/>
 
   <!-- JaCoCo Coverage analysis -->
   <taskdef uri="antlib:org.jacoco.ant" 
@@ -49,6 +50,8 @@
     <pathelement location="${build.dir}"/>
     <pathelement location="${junit.jar}"/>
     <pathelement location="${hamcrest.jar}"/>
+
+    <pathelement location="lib/fractal.jar"/>
   </path>
 
   <target name="help">
@@ -87,7 +90,7 @@ HotCiv build management for SWEA Course
       <classpath refid="class-path"/>
     </javac>
   </target>
-  
+
   <target name="build.test" depends="build.src">
     <javac srcdir="${test.src.dir}"
 	   destdir="${build.dir}"
@@ -141,7 +144,14 @@ HotCiv build management for SWEA Course
     </junit>
   </target>
 
-  <!-- Run JUnit with JaCoCo code coverage -->
+    <target name="fractal" depends="build.all">
+        <java classname="hotciv.standard.ManualTestFractal">
+            <classpath refid="class-path"/>
+        </java>
+    </target>
+
+
+    <!-- Run JUnit with JaCoCo code coverage -->
   <target name="run.junit" depends="build.all">
     <jacoco:coverage destfile="${jacoco.exec}" >
       <junit printsummary="yes" fork="yes" 
