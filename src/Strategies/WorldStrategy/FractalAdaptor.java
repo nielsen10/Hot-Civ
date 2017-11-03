@@ -26,10 +26,10 @@ public class FractalAdaptor implements WorldStrategy {
         buildFractal(tileMap);
     }
 
-    private void buildFractal(HashMap<Position,TileImpl> tileMap) {
-        for(int i=0; i<=15; i++) {
-            for(int j=0; j<=15; j++) {
-                Position pos = new Position(i,j);
+    public void buildFractal(HashMap<Position, TileImpl> tileMap) {
+        for (int i = 0; i <= 15; i++) {
+            for (int j = 0; j <= 15; j++) {
+                Position pos = new Position(i, j);
 
                 char tileChar = generator.getLandscapeAt(i, j);
                 String type = "error";
@@ -50,13 +50,7 @@ public class FractalAdaptor implements WorldStrategy {
                 }
 
                 tileMap.put(pos, new TileImpl(pos, type));
-                System.out.print(tileChar);
             }
-            System.out.println("");
         }
-    }
-
-    public static void main(String[] args) {
-        new FractalAdaptor().buildFractal(new HashMap<>());
     }
 }
