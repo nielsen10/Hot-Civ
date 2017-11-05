@@ -1,9 +1,9 @@
 package Strategies.UnitActionStrategies;
 
 import hotciv.framework.Position;
-import hotciv.standard.CityImpl;
-import hotciv.standard.GameImpl;
-import hotciv.standard.UnitImpl;
+import hotciv.CityImpl;
+import hotciv.GameImpl;
+import hotciv.UnitImpl;
 
 import java.util.HashMap;
 

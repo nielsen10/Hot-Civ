@@ -1,12 +1,10 @@
 package Strategies.UnitProductionStrategies;
 
-import hotciv.framework.City;
 import hotciv.framework.Game;
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
-import hotciv.standard.CityImpl;
-import hotciv.standard.GameImpl;
-import hotciv.standard.UnitImpl;
+import hotciv.CityImpl;
+import hotciv.UnitImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

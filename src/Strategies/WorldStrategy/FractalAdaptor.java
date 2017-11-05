@@ -2,14 +2,13 @@ package Strategies.WorldStrategy;
 
 import hotciv.framework.GameConstants;
 import hotciv.framework.Position;
-import hotciv.standard.CityImpl;
-import hotciv.standard.GameImpl;
-import hotciv.standard.TileImpl;
-import hotciv.standard.UnitImpl;
+import hotciv.CityImpl;
+import hotciv.GameImpl;
+import hotciv.TileImpl;
+import hotciv.UnitImpl;
 import thirdparty.ThirdPartyFractalGenerator;
 
 import java.util.HashMap;
-import java.util.concurrent.SynchronousQueue;
 
 /**
  * Created by csdev on 10/28/17.
