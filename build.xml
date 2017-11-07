@@ -310,7 +310,12 @@
     </target>
 
     <target name="semi" depends="build.all">
-        <echo message="*** Placeholder for your Semi task ***"/>
+        <echo message="*** Semi task coming your way ***"/>
+        <java fork="yes" classname="hotciv.visual.ShowSemi">
+            <classpath>
+                <path refid="class-path"/>
+            </classpath>
+        </java>
     </target>
 
 </project>
