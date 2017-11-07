@@ -1,13 +1,15 @@
 package hotciv.visual;
 
-import hotciv.Tools.UpdateTool;
+import AbstractFactory.SemiCivFactory;
+import hotciv.GameImpl;
+import hotciv.Tools.CompositeTool;
 import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
 import minidraw.framework.DrawingEditor;
+import minidraw.framework.Factory;
 import minidraw.standard.MiniDrawApplication;
 
-/** Show how GUI changes can be induced by making
-    updates in the underlying domain model.
+/** Template code for exercise FRS 36.44.
 
    This source code is from the book 
      "Flexible, Reliable Software:
@@ -23,23 +25,18 @@ import minidraw.standard.MiniDrawApplication;
    distribute it for non-commercial purposes. For any 
    commercial use, see http://www.baerbak.com/
  */
-public class ShowUpdating {
+public class ShowSemi {
   
   public static void main(String[] args) {
-    Game game = new StubGame2();
+    Game game = new GameImpl(new SemiCivFactory());
 
     DrawingEditor editor =
-      new MiniDrawApplication( "Click anywhere to see Drawing updates",
+      new MiniDrawApplication( "Play your favorite SemiCivGame",
                                new HotCivFactory4(game) );
+
     editor.open();
-    editor.setTool( new UpdateTool(editor, game) );
+    editor.showStatus("Fantastic Semi Civ Game");
 
-    editor.showStatus("Click anywhere to state changes reflected on the GUI");
-                      
-    // Try to set the selection tool instead to see
-    // completely free movement of figures, including the icon
-
-    // editor.setTool( new SelectionTool(editor) );
+    editor.setTool( new CompositeTool(editor, game) );
   }
 }
-

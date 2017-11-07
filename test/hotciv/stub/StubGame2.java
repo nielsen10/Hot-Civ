@@ -10,29 +10,29 @@ import java.util.Map;
  *
  * SWEA support code.
  *
-   This source code is from the book 
-     "Flexible, Reliable Software:
-       Using Patterns and Agile Development"
-     published 2010 by CRC Press.
-   Author: 
-     Henrik B Christensen 
-     Department of Computer Science
-     Aarhus University
-   
-   Please visit http://www.baerbak.com/ for further information.
+ This source code is from the book
+ "Flexible, Reliable Software:
+ Using Patterns and Agile Development"
+ published 2010 by CRC Press.
+ Author:
+ Henrik B Christensen
+ Department of Computer Science
+ Aarhus University
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
- 
-       http://www.apache.org/licenses/LICENSE-2.0
- 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
+ Please visit http://www.baerbak.com/ for further information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 
 public class StubGame2 implements Game {
 
@@ -41,6 +41,8 @@ public class StubGame2 implements Game {
   private Position pos_legion_blue;
   private Position pos_settler_red;
   private Position pos_galley_red;
+  private Position pos_city_red;
+  private Position pos_city_blue;
 
   private Unit red_archer;
 
@@ -62,6 +64,7 @@ public class StubGame2 implements Game {
 
   // Stub only allows moving red archer
   public boolean moveUnit(Position from, Position to ) {
+    if(from.equals(to)) return false;
     System.out.println( "-- StubGame2 / moveUnit called: "+from+"->"+to );
     if ( from.equals(pos_archer_red) ) {
       pos_archer_red = to;
@@ -80,28 +83,30 @@ public class StubGame2 implements Game {
   public void endOfTurn() {
     System.out.println( "-- StubGame2 / endOfTurn called." );
     inTurn = (getPlayerInTurn() == Player.RED ?
-              Player.BLUE :
-              Player.RED );
+            Player.BLUE :
+            Player.RED );
     // no age increments
     gameObserver.turnEnds(inTurn, -4000);
   }
   public Player getPlayerInTurn() { return inTurn; }
-  
+
 
   // === Observer handling ===
   protected GameObserver gameObserver;
   // observer list is only a single one...
   public void addObserver(GameObserver observer) {
     gameObserver = observer;
-  } 
+  }
 
-  public StubGame2() { 
-    defineWorld(1); 
+  public StubGame2() {
+    defineWorld(1);
     // AlphaCiv configuration
     pos_archer_red = new Position( 2, 0);
     pos_legion_blue = new Position( 3, 2);
     pos_settler_red = new Position( 4, 3);
     pos_galley_red = new Position( 6, 4);
+    pos_city_blue = new Position(2,1);
+    pos_city_red = new Position(12,4);
 
     // the only one I need to store for this stub
     red_archer = new StubUnit( GameConstants.ARCHER, Player.RED );
@@ -128,9 +133,17 @@ public class StubGame2 implements Game {
     }
   }
 
-  public City getCityAt(Position p ) { return null; }
+  public City getCityAt(Position p ) {
+
+    if ( p.equals(pos_city_red) ) {
+      return new StubCity( Player.RED , GameConstants.LEGION);
+    }if ( p.equals(pos_city_blue) ) {
+      return new StubCity( Player.BLUE, GameConstants.SETTLER );
+    }
+    return null;
+  }
   public Player getWinner() { return null; }
-  public int getAge() { return 0; }  
+  public int getAge() { return 0; }
   public void changeWorkForceFocusInCityAt(Position p, String balance ) {}
   public void changeProductionInCityAt(Position p, String unitType ) {}
   public void performUnitActionAt( Position p ) {
@@ -158,4 +171,34 @@ class StubUnit implements Unit {
   public int getMoveCount() { return 1; }
   public int getDefensiveStrength() { return 0; }
   public int getAttackingStrength() { return 0; }
+}
+class StubCity implements City {
+  private String production;
+  private Player owner;
+
+  public StubCity(Player owner, String production) {
+    this.owner = owner;
+    this.production = production;
+  }
+
+  public Player getOwner() {
+    return owner;
+  }
+
+  public String getProduction() {
+    return production;
+  }
+  public String getWorkforceFocus() {
+    return null;
+  }
+  public Position getPosition() {
+    return null;
+  }
+
+  public int getTreasury() {
+    return 0;
+  }
+  public int getSize() {
+    return 0;
+  }
 }

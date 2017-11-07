@@ -1,15 +1,10 @@
 package hotciv.visual;
 
+import hotciv.Tools.MoveTool;
 import hotciv.framework.Game;
-import hotciv.framework.Position;
-import hotciv.framework.Unit;
 import hotciv.stub.StubGame2;
-import hotciv.view.GfxConstants;
 import minidraw.framework.DrawingEditor;
 import minidraw.standard.MiniDrawApplication;
-import minidraw.standard.SelectionTool;
-
-import java.awt.event.MouseEvent;
 
 /** Template code for exercise FRS 36.39.
 
@@ -39,53 +34,7 @@ public class ShowMove {
     editor.showStatus("Move units to see Game's moveUnit method being called.");
 
     // Replace the setting of the tool with your UnitMoveTool implementation.
-    editor.setTool( new SelectionToolImpl(editor, game) );
+    editor.setTool( new MoveTool(editor, game) );
   }
 }
 
-class SelectionToolImpl extends SelectionTool {
-  private Game game;
-  private Unit movingUnit;
-  private Position oldPos;
-
-  public SelectionToolImpl(DrawingEditor editor, Game game) {
-    super(editor);
-    this.game = game;
-  }
-
-  @Override
-  public void mouseDown(MouseEvent e, int x, int y) {
-    super.mouseDown(e, x, y);
-
-    oldPos = calculatePosition(e);
-
-    editor.showStatus("Dragging unit at " + oldPos);
-    movingUnit = game.getUnitAt(oldPos);
-
-  }
-
-  @Override
-  public void mouseUp(MouseEvent e, int x, int y) {
-    Position newPos = calculatePosition(e);
-
-    if(movingUnit!=null){
-
-      if(game.moveUnit(oldPos,newPos)) {
-        game.moveUnit(oldPos,newPos);
-        editor.showStatus("State change: moved unit from " + oldPos + " to " + newPos);
-      } else {
-        game.moveUnit(oldPos,newPos);
-        editor.showStatus("invalid move");
-      }
-    }
-    super.mouseUp(e, x, y);
-  }
-
-  public Position calculatePosition(MouseEvent e) {
-    int posX = (e.getX()-GfxConstants.MAP_OFFSET_X) / GfxConstants.TILESIZE;
-    int posY = (e.getY()-GfxConstants.MAP_OFFSET_Y) / GfxConstants.TILESIZE;
-
-    Position position = new Position(posY,posX);
-    return position;
-  }
-}
