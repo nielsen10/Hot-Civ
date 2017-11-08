@@ -25,22 +25,12 @@ public class EndOfTurnTool extends NullTool {
   public void mouseDown(MouseEvent e, int x, int y) {
     super.mouseDown(e, x, y);
 
-    boolean correctY = (e.getY() > GfxConstants.TURN_SHIELD_Y && e.getY() < GfxConstants.TURN_SHIELD_Y+30);
     boolean correctX = (e.getX() > GfxConstants.TURN_SHIELD_X && e.getX() < GfxConstants.TURN_SHIELD_X+30);
+    boolean correctY = (e.getY() > GfxConstants.TURN_SHIELD_Y && e.getY() < GfxConstants.TURN_SHIELD_Y+30);
 
     if(correctX && correctY) {
       game.endOfTurn();
       editor.showStatus("Ending turn for player "+ game.getPlayerInTurn());
     }
-
-
-  }
-
-  public Position calculatePosition(MouseEvent e) {
-    int posX = (e.getX()- GfxConstants.MAP_OFFSET_X) / GfxConstants.TILESIZE;
-    int posY = (e.getY()-GfxConstants.MAP_OFFSET_Y) / GfxConstants.TILESIZE;
-
-    Position position = new Position(posY,posX);
-    return position;
   }
 }

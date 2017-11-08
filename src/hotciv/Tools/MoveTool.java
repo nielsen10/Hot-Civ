@@ -24,7 +24,7 @@ public class MoveTool extends SelectionTool {
 
   @Override
   public void mouseDown(MouseEvent e, int x, int y) {
-    oldPos = calculatePosition(e);
+    oldPos = GfxConstants.getPositionFromXY(x,y);
     boolean isUnit = game.getUnitAt(oldPos) != null;
     if(isUnit) {
       super.mouseDown(e, x, y);
@@ -38,7 +38,7 @@ public class MoveTool extends SelectionTool {
 
   @Override
   public void mouseUp(MouseEvent e, int x, int y) {
-    Position newPos = calculatePosition(e);
+    Position newPos = GfxConstants.getPositionFromXY(x,y);
 
     if(movingUnit!=null){
 
@@ -50,13 +50,5 @@ public class MoveTool extends SelectionTool {
     }
     movingUnit=null;
     super.mouseUp(e, x, y);
-  }
-
-  public Position calculatePosition(MouseEvent e) {
-    int posX = (e.getX()- GfxConstants.MAP_OFFSET_X) / GfxConstants.TILESIZE;
-    int posY = (e.getY()-GfxConstants.MAP_OFFSET_Y) / GfxConstants.TILESIZE;
-
-    Position position = new Position(posY,posX);
-    return position;
   }
 }

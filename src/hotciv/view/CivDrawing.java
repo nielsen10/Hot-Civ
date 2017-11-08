@@ -178,6 +178,8 @@ public class CivDrawing
     turnShieldIcon.set( playerShield,
             new Point( GfxConstants.TURN_SHIELD_X,
                     GfxConstants.TURN_SHIELD_Y ) );
+
+    worldChangedAt(null);
   }
 
   private TextFigure unitMovesLeft;
@@ -193,6 +195,7 @@ public class CivDrawing
     delegate.remove(productionIcon);
     delegate.remove(workForceIcon);
 
+
     if(game.getUnitAt(position) != null) tileFocusOnUnit(position);
     if(game.getCityAt(position) != null) tileFocusOnCity(position);
   }
@@ -200,7 +203,8 @@ public class CivDrawing
   public void tileFocusOnCity(Position position) {
     String cityOwner = GfxConstants.RED_SHIELD;
     if(game.getCityAt(position).getOwner().equals(Player.BLUE)) cityOwner = GfxConstants.BLUE_SHIELD;
-    String cityProduction = game.getCityAt(position).getProduction();
+    String cityProduction = GfxConstants.NOTHING;
+    if(game.getCityAt(position).getProduction() != null) cityProduction = game.getCityAt(position).getProduction();
 
     cityShieldIcon =
             new ImageFigure(cityOwner,

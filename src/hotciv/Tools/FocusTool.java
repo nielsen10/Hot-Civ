@@ -13,11 +13,13 @@ import java.awt.event.MouseEvent;
  */
 public class FocusTool extends NullTool {
 
+  private CompositeTool compositeTool;
   private DrawingEditor editor;
   private Position pos;
   private Game game;
 
-  public FocusTool(DrawingEditor editor, Game game) {
+  public FocusTool(DrawingEditor editor, Game game, CompositeTool compositeTool) {
+    this.compositeTool = compositeTool;
     this.editor = editor;
     this.game = game;
   }
@@ -26,18 +28,20 @@ public class FocusTool extends NullTool {
   public void mouseDown(MouseEvent e, int x, int y) {
     super.mouseDown(e, x, y);
 
-    pos = calculatePosition(e);
+    pos = GfxConstants.getPositionFromXY(x,y);
 
-    game.setTileFocus(pos);
+    boolean productionX = (e.getX() > GfxConstants.CITY_PRODUCTION_X && e.getX() < GfxConstants.CITY_PRODUCTION_X+30);
+    boolean productionY = (e.getY() > GfxConstants.CITY_PRODUCTION_Y && e.getY() < GfxConstants.CITY_PRODUCTION_Y+30);
+
+    if(!productionX && !productionY) {
+      if(game.getCityAt(pos)!=null) {
+        compositeTool.setCityInFocus(pos);
+      } else {
+        compositeTool.setCityInFocus(null);
+      }
+      game.setTileFocus(pos);
+    }
+
     editor.showStatus("Focusing at " + pos);
-
-  }
-
-  public Position calculatePosition(MouseEvent e) {
-    int posX = (e.getX()- GfxConstants.MAP_OFFSET_X) / GfxConstants.TILESIZE;
-    int posY = (e.getY()-GfxConstants.MAP_OFFSET_Y) / GfxConstants.TILESIZE;
-
-    Position position = new Position(posY,posX);
-    return position;
   }
 }

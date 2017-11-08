@@ -27,7 +27,8 @@ public class ActionTool extends NullTool {
     public void mouseDown(MouseEvent e, int x, int y) {
         super.mouseDown(e, x, y);
 
-        if(e.isShiftDown()) {
+        pos = GfxConstants.getPositionFromXY(x,y);
+        if(e.isShiftDown() && game.getUnitAt(pos) != null ) {
             pos = GfxConstants.getPositionFromXY(e.getX(),e.getY());
             game.performUnitActionAt(pos);
             editor.showStatus("Performing unit action at: " + pos);

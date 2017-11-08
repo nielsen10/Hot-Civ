@@ -2,6 +2,8 @@ package hotciv.visual;
 
 import hotciv.Tools.CompositeTool;
 import hotciv.framework.Game;
+import hotciv.framework.GameConstants;
+import hotciv.framework.Position;
 import hotciv.stub.StubGame2;
 import minidraw.framework.DrawingEditor;
 import minidraw.standard.MiniDrawApplication;

@@ -1,5 +1,6 @@
 package hotciv.visual;
 
+import hotciv.Tools.CompositeTool;
 import hotciv.Tools.FocusTool;
 import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
@@ -34,7 +35,7 @@ public class ShowSetFocus {
     editor.showStatus("Click a tile to see Game's setFocus method being called.");
 
     // Replace the setting of the tool with your SetFocusTool implementation.
-    editor.setTool( new FocusTool(editor, game) );
+    editor.setTool( new FocusTool(editor, game, new CompositeTool(editor,game)) );
   }
 }
 
