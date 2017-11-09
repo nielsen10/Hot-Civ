@@ -1,9 +1,7 @@
 package Strategies.AttackingStrategies;
 
-import Strategies.DiceStrategies.DiceStrategy;
 import hotciv.framework.Game;
 import hotciv.framework.Position;
-import hotciv.standard.GameImpl;
 
 /**
  * Created by csdev on 10/2/17.

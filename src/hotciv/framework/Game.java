@@ -135,4 +135,7 @@ public interface Game {
    */
   public void performUnitActionAt( Position p );
 
+  public void addObserver(GameObserver observer);
+
+  public void setTileFocus(Position position);
 }

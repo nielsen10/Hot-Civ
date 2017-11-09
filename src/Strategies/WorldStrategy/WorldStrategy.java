@@ -1,10 +1,10 @@
 package Strategies.WorldStrategy;
 
 import hotciv.framework.Position;
-import hotciv.standard.CityImpl;
-import hotciv.standard.GameImpl;
-import hotciv.standard.TileImpl;
-import hotciv.standard.UnitImpl;
+import hotciv.CityImpl;
+import hotciv.GameImpl;
+import hotciv.TileImpl;
+import hotciv.UnitImpl;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
 package Strategies.WinningStrategies;
 
 import hotciv.framework.Player;
-import hotciv.standard.GameImpl;
+import hotciv.GameImpl;
 
 /**
  * Created by csdev on 9/17/17.
