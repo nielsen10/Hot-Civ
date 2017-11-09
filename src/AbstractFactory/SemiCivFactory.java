@@ -47,6 +47,6 @@ public class SemiCivFactory implements CivFactory {
 
     @Override
     public UnitProductionStrategy createUnitProductionStrategy() {
-        return new AlphaUnitProductionStrategy();
+        return new ThetaUnitProductionStrategy();
     }
 }

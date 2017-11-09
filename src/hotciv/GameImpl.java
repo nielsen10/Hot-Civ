@@ -55,7 +55,6 @@ public class GameImpl implements Game {
 
     private int redBattlesWon;
     private int blueBattlesWon;
-    private GameObserver gameObserver;
 
     public GameImpl(CivFactory factory){
         this.winningStrategy = factory.createWinningStrategy();
@@ -101,9 +100,6 @@ public class GameImpl implements Game {
 
 
         updateUnitPosition(from, to);
-
-        gameObserver.worldChangedAt(from);
-        gameObserver.worldChangedAt(to);
 
         return true;
     }
@@ -172,7 +168,7 @@ public class GameImpl implements Game {
         }
 
         nextPlayerInTurn();
-        gameObserver.turnEnds(getPlayerInTurn(), year);
+
 
     }
 
@@ -213,23 +209,19 @@ public class GameImpl implements Game {
     public void changeProductionInCityAt( Position p, String unitType ) {
         CityImpl city = (CityImpl) getCityAt(p);
         city.setProduction(unitType);
-        gameObserver.tileFocusChangedAt(p);
+
     }
 
     public void performUnitActionAt( Position p ) {
         unitActionStrategy.deployUnitAction(p, this, unitMap, cityMap);
-        gameObserver.worldChangedAt(p);
+
     }
 
     @Override
-    public void addObserver(GameObserver observer) {
-        gameObserver = observer;
-    }
+    public void addObserver(GameObserver observer) {}
 
     @Override
-    public void setTileFocus(Position position) {
-        gameObserver.tileFocusChangedAt(position);
-    }
+    public void setTileFocus(Position position) {}
 
     public int getRedBattlesWon() {
         return redBattlesWon;
