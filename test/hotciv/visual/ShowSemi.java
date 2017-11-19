@@ -2,6 +2,7 @@ package hotciv.visual;
 
 import AbstractFactory.SemiCivFactory;
 import hotciv.GameImpl;
+import hotciv.GameObserverImpl;
 import hotciv.Tools.CompositeTool;
 import hotciv.framework.Game;
 import hotciv.stub.StubGame2;
@@ -29,14 +30,15 @@ public class ShowSemi {
   
   public static void main(String[] args) {
     Game game = new GameImpl(new SemiCivFactory());
+    Game gameObserver = new GameObserverImpl(new SemiCivFactory(),game);
 
     DrawingEditor editor =
       new MiniDrawApplication( "Play your favorite SemiCivGame",
-                               new HotCivFactory4(game) );
+                               new HotCivFactory4(gameObserver) );
 
     editor.open();
     editor.showStatus("Fantastic Semi Civ Game");
 
-    editor.setTool( new CompositeTool(editor, game) );
+    editor.setTool( new CompositeTool(editor, gameObserver) );
   }
 }
